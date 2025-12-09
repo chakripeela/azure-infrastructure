@@ -9,13 +9,12 @@ terraform {
 
 
 provider "azurerm" {
-  # Configuration options
   features {}
 }
 
 
 module "resource-group" {
-  source = "./resource-group"
-
+  source  = "./resource-group"
+  rg-name = "data-maester-rg"
 }
 
