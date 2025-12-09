@@ -1,4 +1,4 @@
-name: "Create Infrastructure With Terraform by {{ github.actor }}"
+name: "Create Infrastructure - ${{ github.actor }} - ${{ github.event_name }} - ${{ github.ref_name }}"
 
 on:
     push:
