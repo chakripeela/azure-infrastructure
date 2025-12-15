@@ -16,3 +16,4 @@ resource "azurerm_databricks_workspace" "databricks_workspace" {
   managed_services_cmk_key_vault_key_id = var.managed_services_cmk_key_vault_key_id
   managed_disk_cmk_key_vault_key_id     = var.managed_disk_cmk_key_vault_key_id
 }
+
