@@ -1,2 +1,2 @@
-application_name="data-maester"
+application_name="data"
 location = "centralus"

@@ -1,10 +1,11 @@
 resource "azurerm_databricks_workspace" "databricks_workspace" {
-  name                        = "dev-${var.application_name}-${var.location}"
+  name                        = "${var.application_name}-${var.location}"
   location                    = var.location
   resource_group_name         = var.resource_group_name
   sku                         = "premium"
   managed_resource_group_name = "${var.resource_group_name}-mrg"
   # public_network_access_enabled = false
+  customer_managed_key_enabled = true
   custom_parameters {
     virtual_network_id                                   = var.vnet_id
     private_subnet_name                                  = var.private_subnet_name
