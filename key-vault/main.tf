@@ -15,6 +15,7 @@ resource "azurerm_key_vault_key" "managed_disk_cmk_key" {
   key_type     = "RSA"
   key_size     = 2048
   key_opts     = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
+  depends_on   = [azurerm_key_vault.key_vault, azurerm_role_assignment.sp_role, azurerm_role_assignment.sp_role_officer]
 }
 
 resource "azurerm_key_vault_key" "managed_services_cmk_key" {
@@ -23,6 +24,7 @@ resource "azurerm_key_vault_key" "managed_services_cmk_key" {
   key_type     = "RSA"
   key_size     = 2048
   key_opts     = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
+  depends_on   = [azurerm_key_vault.key_vault, azurerm_role_assignment.sp_role, azurerm_role_assignment.sp_role_officer]
 }
 
 
