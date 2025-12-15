@@ -1,5 +1,5 @@
 resource "azurerm_key_vault" "key_vault" {
-  name                       = "kv-data-maes-${var.location}"
+  name                       = "kv-${var.application_name}-${var.location}"
   location                   = var.location
   resource_group_name        = var.resource_group_name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
