@@ -21,9 +21,8 @@ resource "azurerm_cognitive_deployment" "llm_model" {
   name                 = "llm-model-${var.application_name}-${var.location}"
   cognitive_account_id = azurerm_cognitive_account.cognitive_account.id
   model {
-    format  = "OpenAI"
-    name    = "gpt-4.1-mini"
-    version = "1"
+    format = "OpenAI"
+    name   = "gpt-4.1-mini"
   }
   sku {
     name     = "Standard"
