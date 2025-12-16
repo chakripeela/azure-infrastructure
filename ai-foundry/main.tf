@@ -21,8 +21,9 @@ resource "azurerm_cognitive_deployment" "llm_model" {
   name                 = "llm-model-${var.application_name}-${var.location}"
   cognitive_account_id = azurerm_cognitive_account.cognitive_account.id
   model {
-    format = "OpenAI"
-    name   = "gpt-35-turbo"
+    format  = "OpenAI"
+    name    = "gpt-4.1"
+    version = "2025-04-14"
   }
   sku {
     name     = "GlobalStandard"
