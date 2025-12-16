@@ -55,3 +55,13 @@ module "databricks" {
   private_subnet_network_security_group_association_id = module.virtual_network.private_subnet_network_security_group_association_id
   depends_on                                           = [module.virtual_network, module.key_vault]
 }
+
+module "open-ai-foundry" {
+  source              = "./ai-foundary"
+  application_name    = var.application_name
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+  storage_account_id  = module.storage_account.storage_account_id
+  key_vault_id        = module.key_vault.key_vault_id
+  depends_on          = [module.storage_account, module.key_vault]
+}
