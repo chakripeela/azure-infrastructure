@@ -1,5 +1,5 @@
 name: "Create Infrastructure"
-run-name: "Terraform - ${{ github.actor }} - ${{ github.event_name }} - ${{ github.ref_name }}"
+run-name: "${{ github.actor }} triggered infrastructure creation on ${{ github.ref_name }} via ${{ github.event_name }}"
 
 on:
   push:
