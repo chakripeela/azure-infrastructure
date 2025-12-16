@@ -7,3 +7,7 @@ variable "location" {
 variable "resource_group_name" {
   type = string
 }
+variable "containers" {
+  type    = list(string)
+  default = ["raw", "silver", "gold", "ai"]
+}

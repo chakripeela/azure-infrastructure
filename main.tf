@@ -57,7 +57,7 @@ module "databricks" {
 }
 
 module "open-ai-foundry" {
-  source              = "./ai-foundary"
+  source              = "./ai-foundry"
   application_name    = var.application_name
   location            = var.location
   resource_group_name = module.resource_group.resource_group_name
