@@ -10,7 +10,10 @@ resource "azurerm_ai_foundry" "ai_foundry" {
 }
 
 resource "azurerm_cognitive_account" "cognitive_account" {
-  name                = "cog-account-${var.application_name}-${var.location}"
+  name = "cog-account-${var.application_name}-${var.location}"
+  fqdns = [
+    "cogaccount${var.application_name}${var.location}.cognitiveservices.azure.com"
+  ]
   location            = var.location
   resource_group_name = var.resource_group_name
   kind                = "OpenAI"
