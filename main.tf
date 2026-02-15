@@ -26,3 +26,11 @@ module "virtual_network" {
   resource_group_name   = module.resource_group.resource_group_name
   shared_resource_group = module.resource_group.shared_resource_group_name
 }
+
+module "app_service" {
+  source                = "./compute/app-service"
+  plan_name             = "${var.application_name}-plan"
+  location              = var.location
+  resource_group_name   = module.resource_group.resource_group_name
+  #shared_resource_group = module.resource_group.shared_resource_group_name
+}

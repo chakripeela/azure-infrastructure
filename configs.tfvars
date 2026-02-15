@@ -1,2 +1,2 @@
-application_name="data-maester"
+application_name="bookstore-app"
 location = "centralus"
