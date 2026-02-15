@@ -6,10 +6,21 @@ resource "azurerm_virtual_network" "vnet_frontend" {
 }
 
 resource "azurerm_subnet" "appsvc_subnet" {
-  name                 = "snet-shared-${var.application_name}"
+  name                 = "snet-appsvc-${var.application_name}"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.vnet_frontend.name
   address_prefixes     = ["10.0.1.0/24"]
+  delegation {
+    name = "appservice-delegation"
+
+    service_delegation {
+      name = "Microsoft.Web/serverFarms"
+
+      actions = [
+        "Microsoft.Network/virtualNetworks/subnets/action"
+      ]
+    }
+  }
 
 }
 
