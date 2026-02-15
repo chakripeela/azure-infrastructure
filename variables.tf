@@ -1,5 +1,5 @@
 variable application_name {
-  default="data-maester"
+  default="bookstore-app"
   type = string
 }
 variable "location" {

@@ -1,14 +1,14 @@
-resource "azurerm_virtual_network" "virtual_network" {
-  name                = "vnet-${var.application_name}-${var.location}"
+resource "azurerm_virtual_network" "vnet_frontend" {
+  name                = "vnet-${var.application_name}-frontend-${var.location}"
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.0.0.0/16"]
 }
 
-resource "azurerm_subnet" "shared_subnet" {
+resource "azurerm_subnet" "appsvc_subnet" {
   name                 = "snet-shared-${var.application_name}"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.virtual_network.name
+  virtual_network_name = azurerm_virtual_network.vnet_frontend.name
   address_prefixes     = ["10.0.1.0/24"]
 
 }
