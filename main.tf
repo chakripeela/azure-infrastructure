@@ -35,3 +35,8 @@ module "app_service" {
   subnet_id             = module.virtual_network.subnet_appsvc_id
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
+
+module "acr" {
+  source                = "./compute/acr"
+  acr_name              = "${var.application_name}-acr"
+}
