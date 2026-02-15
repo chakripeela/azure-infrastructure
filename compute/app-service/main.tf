@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "plan" {
   location            = var.location
   resource_group_name = var.resource_group_name
   os_type             = "Linux"
-  sku_name            = "B1"
+  sku_name            = "F1"
 }
 
 resource "azurerm_linux_web_app" "app" {
@@ -14,7 +14,7 @@ resource "azurerm_linux_web_app" "app" {
 
   site_config {
     application_stack {
-      node_version = "F1"
+      node_version = "18-lts"
     }
   }
 
