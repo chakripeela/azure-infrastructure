@@ -1,6 +1,6 @@
 variable "acr_name" {
   type = string
-  default = "bookstoreacr"
+  default = "chakripeelaacr"
 }
 variable "resource_group_name" {
   type = string

@@ -38,7 +38,7 @@ module "app_service" {
 
 module "acr" {
   source                = "./compute/acr"
-  acr_name              = "${var.application_name}-acr"
+  acr_name              = "chakripeelaacr"
   location              = var.location
   resource_group_name   = module.resource_group.resource_group_name
 }
