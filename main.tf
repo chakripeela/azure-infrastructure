@@ -32,5 +32,6 @@ module "app_service" {
   plan_name             = "${var.application_name}-plan"
   location              = var.location
   resource_group_name   = module.resource_group.resource_group_name
+  subnet_id             = module.virtual_network.subnet_appsvc_id
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
