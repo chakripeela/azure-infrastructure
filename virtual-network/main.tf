@@ -49,3 +49,21 @@ resource "azurerm_private_dns_zone_virtual_network_link" "sql_database_dns_zone_
   private_dns_zone_name = azurerm_private_dns_zone.sql_database_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.vnet_backend.id
 }
+
+resource "azurerm_virtual_network_peering" "frontend_to_backend" {
+  name                      = "peer-frontend-to-backend-${var.application_name}"
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.vnet_frontend.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet_backend.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
+
+resource "azurerm_virtual_network_peering" "backend_to_frontend" {
+  name                      = "peer-backend-to-frontend-${var.application_name}"
+  resource_group_name       = var.resource_group_name
+  virtual_network_name      = azurerm_virtual_network.vnet_backend.name
+  remote_virtual_network_id = azurerm_virtual_network.vnet_frontend.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
