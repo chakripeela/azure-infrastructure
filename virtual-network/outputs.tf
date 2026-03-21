@@ -6,12 +6,20 @@ output "vnet_backend_id" {
   value = azurerm_virtual_network.vnet_backend.id
 }
 
+output "vnet_common_id" {
+  value = azurerm_virtual_network.vnet_common.id
+}
+
 output "subnet_appsvc_id" {
   value = azurerm_subnet.appsvc_subnet.id
 }
 
 output "subnet_sql_id" {
   value = azurerm_subnet.sql_subnet.id
+}
+
+output "subnet_aks_id" {
+  value = azurerm_subnet.aks_subnet.id
 }
 
 output "sql_private_dns_zone_id" {

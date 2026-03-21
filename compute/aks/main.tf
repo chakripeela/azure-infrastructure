@@ -9,6 +9,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count = 1
     vm_size    = "standard_b2pls_v2"
     os_disk_size_gb = 30
+    vnet_subnet_id = var.subnet_id
   }
 
   identity {
@@ -16,7 +17,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   network_profile {
-    network_plugin = "kubenet"
+    network_plugin = "azure"
   }
 
   sku_tier = "Free"
