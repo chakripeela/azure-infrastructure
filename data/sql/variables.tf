@@ -1,8 +1,20 @@
-variable application_name {
-  default="bookstore-app"
+variable "application_name" {
   type = string
 }
+
 variable "location" {
+  type = string
+}
+
+variable "resource_group_name" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "sql_private_dns_zone_id" {
   type = string
 }
 

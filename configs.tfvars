@@ -1,2 +1,6 @@
-application_name="bookstore-app"
+application_name="todo-app"
 location = "centralus"
+sql_server_name   = "todoappsqlcu"
+sql_database_name = "todoappdb"
+sql_aad_admin_login      = "Chakravarthy Peela"
+sql_aad_admin_object_id  = "5a97597d-c6c4-4a3a-b163-82bae722e1d2"
