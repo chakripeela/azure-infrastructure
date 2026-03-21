@@ -1,5 +1,5 @@
 variable application_name {
-  default="bookstore-app"
+  default="todo-app"
   type = string
 }
 variable "location" {
