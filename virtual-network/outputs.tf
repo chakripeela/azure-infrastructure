@@ -6,10 +6,6 @@ output "vnet_backend_id" {
   value = azurerm_virtual_network.vnet_backend.id
 }
 
-output "vnet_common_id" {
-  value = azurerm_virtual_network.vnet_common.id
-}
-
 output "subnet_appsvc_id" {
   value = azurerm_subnet.appsvc_subnet.id
 }

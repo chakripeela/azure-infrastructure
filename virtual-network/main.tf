@@ -12,13 +12,6 @@ resource "azurerm_virtual_network" "vnet_backend" {
   address_space       = ["10.1.0.0/16"]
 }
 
-resource "azurerm_virtual_network" "vnet_common" {
-  name                = "vnet-${var.application_name}-common-${var.location}"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  address_space       = ["10.2.0.0/16"]
-}
-
 resource "azurerm_subnet" "appsvc_subnet" {
   name                 = "snet-appsvc-${var.application_name}"
   resource_group_name  = var.resource_group_name
@@ -47,8 +40,8 @@ resource "azurerm_subnet" "sql_subnet" {
 resource "azurerm_subnet" "aks_subnet" {
   name                 = "snet-aks-${var.application_name}"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet_common.name
-  address_prefixes     = ["10.2.1.0/24"]
+  virtual_network_name = azurerm_virtual_network.vnet_backend.name
+  address_prefixes     = ["10.1.2.0/24"]
 }
 
 resource "azurerm_network_security_group" "default_nsg" {
@@ -64,45 +57,20 @@ resource "azurerm_private_dns_zone_virtual_network_link" "sql_database_dns_zone_
   virtual_network_id    = azurerm_virtual_network.vnet_backend.id
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "sql_database_dns_zone_common_link" {
-  name                  = "vnet-common-sql-dns-link-${var.application_name}"
-  resource_group_name   = var.shared_resource_group
-  private_dns_zone_name = azurerm_private_dns_zone.sql_database_dns_zone.name
-  virtual_network_id    = azurerm_virtual_network.vnet_common.id
-}
-
-resource "azurerm_virtual_network_peering" "common_to_frontend" {
-  name                      = "peer-common-to-frontend-${var.application_name}"
-  resource_group_name       = var.resource_group_name
-  virtual_network_name      = azurerm_virtual_network.vnet_common.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet_frontend.id
-  allow_virtual_network_access = true
-  allow_forwarded_traffic      = true
-}
-
-resource "azurerm_virtual_network_peering" "frontend_to_common" {
-  name                      = "peer-frontend-to-common-${var.application_name}"
+resource "azurerm_virtual_network_peering" "frontend_to_backend" {
+  name                      = "peer-frontend-to-backend-${var.application_name}"
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.vnet_frontend.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet_common.id
-  allow_virtual_network_access = false
-  allow_forwarded_traffic      = true
-}
-
-resource "azurerm_virtual_network_peering" "common_to_backend" {
-  name                      = "peer-common-to-backend-${var.application_name}"
-  resource_group_name       = var.resource_group_name
-  virtual_network_name      = azurerm_virtual_network.vnet_common.name
   remote_virtual_network_id = azurerm_virtual_network.vnet_backend.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
 
-resource "azurerm_virtual_network_peering" "backend_to_common" {
-  name                      = "peer-backend-to-common-${var.application_name}"
+resource "azurerm_virtual_network_peering" "backend_to_frontend" {
+  name                      = "peer-backend-to-frontend-${var.application_name}"
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.vnet_backend.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet_common.id
+  remote_virtual_network_id = azurerm_virtual_network.vnet_frontend.id
   allow_virtual_network_access = false
   allow_forwarded_traffic      = true
 }
