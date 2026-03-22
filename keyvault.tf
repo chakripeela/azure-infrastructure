@@ -9,6 +9,10 @@ resource "azurerm_key_vault" "api_secrets" {
 
   soft_delete_retention_days = 7
   purge_protection_enabled   = false
+
+  lifecycle {
+    ignore_changes = [soft_delete_retention_days]
+  }
 }
 
 resource "azurerm_key_vault_access_policy" "current" {
