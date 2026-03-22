@@ -59,6 +59,34 @@ resource "azurerm_network_security_group" "default_nsg" {
   resource_group_name = var.resource_group_name
 }
 
+resource "azurerm_network_security_rule" "allow_https_out" {
+  name                        = "AllowHttpsOutbound"
+  priority                    = 100
+  direction                   = "Outbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "443"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.default_nsg.name
+}
+
+resource "azurerm_network_security_rule" "allow_dns_out" {
+  name                        = "AllowDnsOutbound"
+  priority                    = 110
+  direction                   = "Outbound"
+  access                      = "Allow"
+  protocol                    = "Udp"
+  source_port_range           = "*"
+  destination_port_range      = "53"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.default_nsg.name
+}
+
 resource "azurerm_private_dns_zone_virtual_network_link" "sql_database_dns_zone_backend_link" {
   name                  = "vnet-backend-sql-dns-link-${var.application_name}"
   resource_group_name   = var.shared_resource_group
@@ -71,6 +99,11 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_zone_backend_l
   resource_group_name   = var.shared_resource_group
   private_dns_zone_name = azurerm_private_dns_zone.acr_dns_zone.name
   virtual_network_id    = azurerm_virtual_network.vnet_backend.id
+}
+
+resource "azurerm_subnet_network_security_group_association" "aks_nsg_assoc" {
+  subnet_id                 = azurerm_subnet.aks_subnet.id
+  network_security_group_id = azurerm_network_security_group.default_nsg.id
 }
 
 resource "azurerm_virtual_network_peering" "frontend_to_backend" {
