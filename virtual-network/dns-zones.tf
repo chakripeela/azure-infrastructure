@@ -25,3 +25,8 @@ resource "azurerm_private_dns_zone" "web_app_dns_zone" {
   name                = "privatelink.azurewebsites.net"
   resource_group_name = var.shared_resource_group
 }
+
+resource "azurerm_private_dns_zone" "acr_dns_zone" {
+  name                = "privatelink.azurecr.io"
+  resource_group_name = var.shared_resource_group
+}

@@ -8,3 +8,15 @@ variable "resource_group_name" {
 variable "location" {
   type = string
 }
+
+variable "application_name" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "acr_private_dns_zone_id" {
+  type = string
+}

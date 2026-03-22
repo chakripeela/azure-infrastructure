@@ -43,9 +43,12 @@ module "app_service" {
 
 module "acr" {
   source                = "./compute/acr"
+  application_name      = var.application_name
   acr_name              = "chakripeelaacr"
   location              = var.location
   resource_group_name   = module.resource_group.resource_group_name
+  subnet_id             = module.virtual_network.subnet_acr_private_endpoint_id
+  acr_private_dns_zone_id = module.virtual_network.acr_private_dns_zone_id
 }
 
 module "aks" {
