@@ -158,7 +158,7 @@ resource "azurerm_network_security_rule" "allow_dns_out" {
 
 resource "azurerm_network_security_rule" "allow_http_from_appgw" {
   name                        = "AllowHttpFromAppGw"
-  priority                    = 100
+  priority                    = 120
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
