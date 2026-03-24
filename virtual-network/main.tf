@@ -86,9 +86,6 @@ resource "azurerm_network_security_rule" "appgw_allow_gateway_manager" {
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.appgw_nsg.name
-  depends_on = [
-    azurerm_application_gateway.appgw
-  ]
 }
 
 resource "azurerm_network_security_rule" "appgw_allow_http_in" {
@@ -122,9 +119,6 @@ resource "azurerm_network_security_rule" "appgw_allow_https_in" {
 resource "azurerm_subnet_network_security_group_association" "appgw_nsg_assoc" {
   subnet_id                 = azurerm_subnet.appgw_subnet.id
   network_security_group_id = azurerm_network_security_group.appgw_nsg.id
-  depends_on = [
-    azurerm_application_gateway.appgw
-  ]
 }
 
 # ─── AKS NSG ────────────────────────────────────────────────
