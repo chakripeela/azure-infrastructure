@@ -84,7 +84,7 @@ resource "azurerm_application_gateway" "appgw" {
     name                = "probe-aks-api"
     protocol            = "Http"
     host                = var.backend_ip
-    path                = "/api/health"
+    path                = "/health"
     interval            = 30
     timeout             = 30
     unhealthy_threshold = 3
