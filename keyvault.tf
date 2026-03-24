@@ -62,3 +62,11 @@ resource "azurerm_key_vault_secret" "db_name" {
 
   depends_on = [time_sleep.wait_for_key_vault_policy]
 }
+
+resource "azurerm_key_vault_secret" "managed_identity_client_id" {
+  name         = "managed-identity-client-id"
+  value        = module.aks.kubelet_client_id
+  key_vault_id = azurerm_key_vault.api_secrets.id
+
+  depends_on = [time_sleep.wait_for_key_vault_policy]
+}
