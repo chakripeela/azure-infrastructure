@@ -36,6 +36,17 @@ resource "time_sleep" "wait_for_key_vault_policy" {
   create_duration = "30s"
 }
 
+resource "azurerm_key_vault_access_policy" "aks_secrets_provider" {
+  key_vault_id = azurerm_key_vault.api_secrets.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = module.aks.key_vault_secrets_provider_object_id
+
+  secret_permissions = [
+    "Get",
+    "List",
+  ]
+}
+
 resource "azurerm_key_vault_secret" "db_server" {
   name         = "db-server"
   value        = module.sql.sql_server_fqdn
