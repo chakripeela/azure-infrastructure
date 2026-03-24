@@ -7,10 +7,11 @@ resource "azurerm_service_plan" "plan" {
 }
 
 resource "azurerm_linux_web_app" "app" {
-  name                = "todo-app-ui"
-  location            = var.location
-  resource_group_name = var.resource_group_name
-  service_plan_id     = azurerm_service_plan.plan.id
+  name                      = "todo-app-ui"
+  location                  = var.location
+  resource_group_name       = var.resource_group_name
+  service_plan_id           = azurerm_service_plan.plan.id
+  virtual_network_subnet_id = var.subnet_id
 
   identity {
     type = "SystemAssigned"
@@ -20,15 +21,10 @@ resource "azurerm_linux_web_app" "app" {
     application_stack {
       node_version = "22-lts"
     }
+    vnet_route_all_enabled = true
   }
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
   }
-}
-
-# VNet Integration
-resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integration" {
-  app_service_id = azurerm_linux_web_app.app.id
-  subnet_id      = var.subnet_id
 }
