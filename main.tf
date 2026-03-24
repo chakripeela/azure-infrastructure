@@ -70,3 +70,13 @@ module "sql" {
   sql_aad_admin_login     = var.sql_aad_admin_login
   sql_aad_admin_object_id = var.sql_aad_admin_object_id
 }
+
+module "app_gateway" {
+  source              = "./compute/app-gateway"
+  application_name    = var.application_name
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+  subnet_id           = module.virtual_network.subnet_appgw_id
+  app_service_fqdn    = module.app_service.app_service_default_hostname
+  backend_ip          = "10.1.2.250"
+}

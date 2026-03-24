@@ -12,6 +12,13 @@ resource "azurerm_virtual_network" "vnet_backend" {
   address_space       = ["10.1.0.0/16"]
 }
 
+resource "azurerm_virtual_network" "vnet_appgw" {
+  name                = "vnet-${var.application_name}-appgw-${var.location}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  address_space       = ["10.2.0.0/16"]
+}
+
 resource "azurerm_subnet" "appsvc_subnet" {
   name                 = "snet-appsvc-${var.application_name}"
   resource_group_name  = var.resource_group_name
@@ -51,6 +58,13 @@ resource "azurerm_subnet" "acr_private_endpoint_subnet" {
   address_prefixes     = ["10.1.3.0/24"]
 
   private_endpoint_network_policies = "Disabled"
+}
+
+resource "azurerm_subnet" "appgw_subnet" {
+  name                 = "snet-appgw-${var.application_name}"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.vnet_appgw.name
+  address_prefixes     = ["10.2.1.0/24"]
 }
 
 resource "azurerm_network_security_group" "default_nsg" {
@@ -120,6 +134,43 @@ resource "azurerm_virtual_network_peering" "backend_to_frontend" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.vnet_backend.name
   remote_virtual_network_id = azurerm_virtual_network.vnet_frontend.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
+
+# ─── App Gateway VNet Peerings ─────────────────────────────
+resource "azurerm_virtual_network_peering" "appgw_to_frontend" {
+  name                         = "peer-appgw-to-frontend-${var.application_name}"
+  resource_group_name          = var.resource_group_name
+  virtual_network_name         = azurerm_virtual_network.vnet_appgw.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_frontend.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
+
+resource "azurerm_virtual_network_peering" "frontend_to_appgw" {
+  name                         = "peer-frontend-to-appgw-${var.application_name}"
+  resource_group_name          = var.resource_group_name
+  virtual_network_name         = azurerm_virtual_network.vnet_frontend.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_appgw.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
+
+resource "azurerm_virtual_network_peering" "appgw_to_backend" {
+  name                         = "peer-appgw-to-backend-${var.application_name}"
+  resource_group_name          = var.resource_group_name
+  virtual_network_name         = azurerm_virtual_network.vnet_appgw.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_backend.id
+  allow_virtual_network_access = true
+  allow_forwarded_traffic      = true
+}
+
+resource "azurerm_virtual_network_peering" "backend_to_appgw" {
+  name                         = "peer-backend-to-appgw-${var.application_name}"
+  resource_group_name          = var.resource_group_name
+  virtual_network_name         = azurerm_virtual_network.vnet_backend.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_appgw.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }

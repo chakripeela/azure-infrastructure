@@ -30,3 +30,19 @@ output "acr_private_dns_zone_id" {
   value = azurerm_private_dns_zone.acr_dns_zone.id
 }
 
+output "subnet_appgw_id" {
+  value = azurerm_subnet.appgw_subnet.id
+}
+
+output "subnet_appgw_name" {
+  value = azurerm_subnet.appgw_subnet.name
+}
+
+output "vnet_frontend_name" {
+  value = azurerm_virtual_network.vnet_frontend.name
+}
+
+output "vnet_appgw_id" {
+  value = azurerm_virtual_network.vnet_appgw.id
+}
+
