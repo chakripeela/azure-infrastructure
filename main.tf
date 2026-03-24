@@ -30,7 +30,6 @@ module "virtual_network" {
   location              = var.location
   resource_group_name   = module.resource_group.resource_group_name
   shared_resource_group = module.resource_group.shared_resource_group_name
-  depends_on            = [module.app_gateway]
 }
 
 module "app_service" {
