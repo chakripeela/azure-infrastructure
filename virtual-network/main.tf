@@ -67,6 +67,61 @@ resource "azurerm_subnet" "appgw_subnet" {
   address_prefixes     = ["10.2.1.0/24"]
 }
 
+# ─── App Gateway NSG (required for v2) ──────────────────────
+resource "azurerm_network_security_group" "appgw_nsg" {
+  name                = "nsg-appgw-${var.application_name}-${var.location}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_network_security_rule" "appgw_allow_gateway_manager" {
+  name                        = "AllowGatewayManagerInbound"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "65200-65535"
+  source_address_prefix       = "GatewayManager"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.appgw_nsg.name
+}
+
+resource "azurerm_network_security_rule" "appgw_allow_http_in" {
+  name                        = "AllowHttpInbound"
+  priority                    = 110
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = "Internet"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.appgw_nsg.name
+}
+
+resource "azurerm_network_security_rule" "appgw_allow_https_in" {
+  name                        = "AllowHttpsInbound"
+  priority                    = 120
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "443"
+  source_address_prefix       = "Internet"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.appgw_nsg.name
+}
+
+resource "azurerm_subnet_network_security_group_association" "appgw_nsg_assoc" {
+  subnet_id                 = azurerm_subnet.appgw_subnet.id
+  network_security_group_id = azurerm_network_security_group.appgw_nsg.id
+}
+
+# ─── AKS NSG ────────────────────────────────────────────────
 resource "azurerm_network_security_group" "default_nsg" {
   name                = "nsg-${var.application_name}-${var.location}"
   location            = var.location
@@ -96,6 +151,20 @@ resource "azurerm_network_security_rule" "allow_dns_out" {
   source_port_range           = "*"
   destination_port_range      = "53"
   source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.default_nsg.name
+}
+
+resource "azurerm_network_security_rule" "allow_http_from_appgw" {
+  name                        = "AllowHttpFromAppGw"
+  priority                    = 100
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "80"
+  source_address_prefix       = "10.2.1.0/24"
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.default_nsg.name
