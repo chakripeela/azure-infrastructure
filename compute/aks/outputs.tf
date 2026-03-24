@@ -7,6 +7,11 @@ output "kubelet_client_id" {
   value       = azurerm_kubernetes_cluster.aks.kubelet_identity[0].client_id
 }
 
+output "cluster_identity_principal_id" {
+  description = "Principal ID of the AKS cluster system-assigned managed identity"
+  value       = azurerm_kubernetes_cluster.aks.identity[0].principal_id
+}
+
 output "key_vault_secrets_provider_object_id" {
   description = "Object ID of the Key Vault Secrets Provider (CSI driver) managed identity"
   value       = azurerm_kubernetes_cluster.aks.key_vault_secrets_provider[0].secret_identity[0].object_id

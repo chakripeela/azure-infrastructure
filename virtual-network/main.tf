@@ -120,6 +120,6 @@ resource "azurerm_virtual_network_peering" "backend_to_frontend" {
   resource_group_name       = var.resource_group_name
   virtual_network_name      = azurerm_virtual_network.vnet_backend.name
   remote_virtual_network_id = azurerm_virtual_network.vnet_frontend.id
-  allow_virtual_network_access = false
+  allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
