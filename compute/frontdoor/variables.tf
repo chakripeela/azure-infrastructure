@@ -1,4 +1,12 @@
+variable "app_service_fqdn" {
+  description = "FQDN of the App Service."
+  type        = string
+}
 
+variable "backend_ip" {
+  description = "Backend IP for AKS API."
+  type        = string
+}
 variable "application_name" {
   description = "Name of the application."
   type        = string
@@ -10,10 +18,6 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  type = string
-}
-
-variable "shared_resource_group" {
   type = string
 }
 

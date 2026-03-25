@@ -1,9 +1,12 @@
-variable application_name {
-  default="todo-app"
-  type = string
+variable "application_name" {
+  description = "Name of the application."
+  type        = string
+  default     = "todo-app"
 }
+
 variable "location" {
-  type = string
+  description = "Azure region to deploy resources."
+  type        = string
 }
 
 variable "sql_server_name" {
@@ -22,4 +25,10 @@ variable "sql_aad_admin_login" {
 variable "sql_aad_admin_object_id" {
   type        = string
   description = "Object ID of the Azure AD user or group to set as SQL Server admin."
+}
+
+variable "gateway_type" {
+  description = "Type of gateway to deploy: appgw or frontdoor"
+  type        = string
+  default     = "appgw"
 }

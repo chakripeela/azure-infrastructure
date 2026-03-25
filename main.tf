@@ -71,6 +71,8 @@ module "sql" {
   sql_aad_admin_object_id = var.sql_aad_admin_object_id
 }
 
+
+# Conditional deployment: Application Gateway or Azure Front Door
 module "app_gateway" {
   source              = "./compute/app-gateway"
   application_name    = var.application_name
@@ -79,4 +81,16 @@ module "app_gateway" {
   subnet_id           = module.virtual_network.subnet_appgw_id
   app_service_fqdn    = module.app_service.app_service_default_hostname
   backend_ip          = "10.1.2.250"
+  count               = var.gateway_type == "appgw" ? 1 : 0
+}
+
+module "frontdoor" {
+  source              = "./compute/frontdoor"
+  application_name    = var.application_name
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+  gateway_type        = var.gateway_type
+  app_service_fqdn    = module.app_service.app_service_default_hostname
+  backend_ip          = "10.1.2.250"
+  count               = var.gateway_type == "frontdoor" ? 1 : 0
 }
