@@ -12,8 +12,8 @@ resource "azurerm_virtual_network" "vnet_backend" {
   address_space       = ["10.1.0.0/16"]
 }
 
-resource "azurerm_virtual_network" "vnet_loadbalancer" {
-  name                = "vnet-${var.application_name}-loadbalancer-${var.location}"
+resource "azurerm_virtual_network" "vnet_appgw" {
+  name                = "vnet-${var.application_name}-appgw-${var.location}"
   location            = var.location
   resource_group_name = var.resource_group_name
   address_space       = ["10.2.0.0/16"]
@@ -63,7 +63,7 @@ resource "azurerm_subnet" "acr_private_endpoint_subnet" {
 resource "azurerm_subnet" "appgw_subnet" {
   name                 = "snet-appgw-${var.application_name}"
   resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet_loadbalancer.name
+  virtual_network_name = azurerm_virtual_network.vnet_appgw.name
   address_prefixes     = ["10.2.1.0/24"]
 }
 
@@ -221,38 +221,38 @@ resource "azurerm_virtual_network_peering" "backend_to_frontend" {
 }
 
 # ─── App Gateway VNet Peerings ─────────────────────────────
-resource "azurerm_virtual_network_peering" "loadbalancer_to_frontend" {
-  name                         = "peer-loadbalancer-to-frontend-${var.application_name}"
+resource "azurerm_virtual_network_peering" "appgw_to_frontend" {
+  name                         = "peer-appgw-to-frontend-${var.application_name}"
   resource_group_name          = var.resource_group_name
-  virtual_network_name         = azurerm_virtual_network.vnet_loadbalancer.name
+  virtual_network_name         = azurerm_virtual_network.vnet_appgw.name
   remote_virtual_network_id    = azurerm_virtual_network.vnet_frontend.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
 
-resource "azurerm_virtual_network_peering" "frontend_to_loadbalancer" {
-  name                         = "peer-frontend-to-loadbalancer-${var.application_name}"
+resource "azurerm_virtual_network_peering" "frontend_to_appgw" {
+  name                         = "peer-frontend-to-appgw-${var.application_name}"
   resource_group_name          = var.resource_group_name
   virtual_network_name         = azurerm_virtual_network.vnet_frontend.name
-  remote_virtual_network_id    = azurerm_virtual_network.vnet_loadbalancer.id
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_appgw.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
 
-resource "azurerm_virtual_network_peering" "loadbalancer_to_backend" {
-  name                         = "peer-loadbalancer-to-backend-${var.application_name}"
+resource "azurerm_virtual_network_peering" "appgw_to_backend" {
+  name                         = "peer-appgw-to-backend-${var.application_name}"
   resource_group_name          = var.resource_group_name
-  virtual_network_name         = azurerm_virtual_network.vnet_loadbalancer.name
+  virtual_network_name         = azurerm_virtual_network.vnet_appgw.name
   remote_virtual_network_id    = azurerm_virtual_network.vnet_backend.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
 
-resource "azurerm_virtual_network_peering" "backend_to_loadbalancer" {
-  name                         = "peer-backend-to-loadbalancer-${var.application_name}"
+resource "azurerm_virtual_network_peering" "backend_to_appgw" {
+  name                         = "peer-backend-to-appgw-${var.application_name}"
   resource_group_name          = var.resource_group_name
   virtual_network_name         = azurerm_virtual_network.vnet_backend.name
-  remote_virtual_network_id    = azurerm_virtual_network.vnet_loadbalancer.id
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_appgw.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
