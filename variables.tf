@@ -1,9 +1,12 @@
-variable application_name {
-  default="todo-app"
-  type = string
+variable "application_name" {
+  description = "Name of the application."
+  type        = string
+  default     = "todo-app"
 }
+
 variable "location" {
-  type = string
+  description = "Azure region to deploy resources."
+  type        = string
 }
 
 variable "sql_server_name" {

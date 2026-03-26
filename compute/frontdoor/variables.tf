@@ -1,3 +1,7 @@
+variable "app_service_fqdn" {
+  description = "FQDN of the App Service."
+  type        = string
+}
 
 variable "application_name" {
   description = "Name of the application."
@@ -10,9 +14,5 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  type = string
-}
-
-variable "shared_resource_group" {
   type = string
 }
