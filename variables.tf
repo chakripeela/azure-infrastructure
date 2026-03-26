@@ -26,9 +26,3 @@ variable "sql_aad_admin_object_id" {
   type        = string
   description = "Object ID of the Azure AD user or group to set as SQL Server admin."
 }
-
-variable "gateway_type" {
-  description = "Type of gateway to deploy: appgw or frontdoor"
-  type        = string
-  default     = "appgw"
-}

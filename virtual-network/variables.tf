@@ -16,9 +16,3 @@ variable "resource_group_name" {
 variable "shared_resource_group" {
   type = string
 }
-
-variable "gateway_type" {
-  description = "Type of gateway to deploy: appgw or frontdoor"
-  type        = string
-  default     = "appgw"
-}
