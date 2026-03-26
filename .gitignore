@@ -8,3 +8,5 @@
 .terraform/providers/registry.terraform.io/hashicorp/azuread/3.7.0/darwin_arm64/terraform-provider-azuread_v3.7.0_x5
 errored.tfstate
 ai-foundry/test.py
+.vs/
+
