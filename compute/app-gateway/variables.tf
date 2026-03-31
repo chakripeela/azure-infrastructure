@@ -25,3 +25,9 @@ variable "backend_ip" {
   description = "Private IP of the backend (AKS internal LB)"
   default     = "10.1.2.250"
 }
+
+variable "appgw_nsg_id" {
+  type        = string
+  description = "Network Security Group ID for the Application Gateway"
+  default     = null
+}

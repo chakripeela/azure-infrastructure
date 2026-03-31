@@ -7,11 +7,11 @@ on:
       plan-only:
         description: "Run plan only (no apply)?"
         required: false
-        default: "No"
+        default: "Yes"
         type: choice
         options:
-          - No
           - Yes
+          - No
 
 permissions:
   contents: read
