@@ -41,3 +41,18 @@ resource "azurerm_private_endpoint" "sql_private_endpoint" {
     private_dns_zone_ids = [var.sql_private_dns_zone_id]
   }
 }
+
+# DR/Geo-replication: Only create failover group in primary region
+resource "azurerm_mssql_failover_group" "sql_failover_group" {
+  count                 = var.enable_failover_group ? 1 : 0
+  name                  = "failover-group-${var.application_name}"
+  server_id             = azurerm_mssql_server.sql_server.id
+  databases             = [azurerm_mssql_database.sql_database.id]
+  partner_server {
+    id = var.dr_sql_server_id
+  }
+  read_write_endpoint_failover_policy {
+    mode          = "Automatic"
+    grace_minutes = 60
+  }
+}

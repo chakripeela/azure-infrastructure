@@ -35,3 +35,13 @@ variable "sql_aad_admin_object_id" {
   type        = string
   description = "Object ID of the Azure AD user or group to set as SQL Server admin."
 }
+
+variable "enable_failover_group" {
+  type    = bool
+  default = false
+}
+variable "dr_sql_server_id" {
+  type    = string
+  default = ""
+  description = "Resource ID of the DR region SQL server."
+}

@@ -9,6 +9,12 @@ variable "location" {
   type        = string
 }
 
+variable "dr_location" {
+  description = "Azure region for DR deployment."
+  type        = string
+  default = "East US 2"
+}
+
 variable "sql_server_name" {
   type = string
 }

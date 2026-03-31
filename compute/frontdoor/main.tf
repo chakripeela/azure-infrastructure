@@ -52,11 +52,28 @@ resource "azurerm_cdn_frontdoor_origin" "appservice" {
   weight                          = 1000
 }
 
+resource "azurerm_cdn_frontdoor_origin" "dr_appservice" {
+  count                           = var.dr_enabled ? 1 : 0
+  name                            = "dr-appservice-origin"
+  cdn_frontdoor_origin_group_id   = azurerm_cdn_frontdoor_origin_group.main.id
+  host_name                       = var.dr_appgw_public_ip
+  http_port                       = 80
+  https_port                      = 443
+  origin_host_header              = var.dr_appgw_public_ip
+  enabled                         = true
+  certificate_name_check_enabled  = false
+  priority                        = 2
+  weight                          = 1000
+}
+
 resource "azurerm_cdn_frontdoor_route" "main" {
   name                           = "fd-route-${var.application_name}-${var.location}"
   cdn_frontdoor_endpoint_id      = azurerm_cdn_frontdoor_endpoint.main.id
   cdn_frontdoor_origin_group_id  = azurerm_cdn_frontdoor_origin_group.main.id
-  cdn_frontdoor_origin_ids       = [
+  cdn_frontdoor_origin_ids       = var.dr_enabled ? [
+    azurerm_cdn_frontdoor_origin.appservice.id,
+    azurerm_cdn_frontdoor_origin.dr_appservice[0].id
+  ] : [
     azurerm_cdn_frontdoor_origin.appservice.id
   ]
   patterns_to_match              = ["/*"]
