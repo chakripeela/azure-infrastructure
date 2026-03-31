@@ -10,8 +10,16 @@ on:
         default: "Yes"
         type: choice
         options:
-          - Yes
-          - No
+          - "Yes"
+          - "No"
+      is_dr:
+        description: "Is this need to be deployed in the DR region?"
+        required: false
+        default: "Yes"
+        type: choice
+        options:
+          - "Yes"
+          - "No"
 
 permissions:
   contents: read
@@ -45,10 +53,11 @@ jobs:
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
-        run: terraform plan -var-file="configs.tfvars"
+        run: terraform plan -var-file="configs.tfvars" -var="is_dr=${{ github.event.inputs.is_dr }}"
 
         # On push to "main", build or change infrastructure according to Terraform configuration files
         # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
       - name: Terraform Apply
         if: ${{ github.event.inputs.plan-only != 'Yes' }}
-        run: terraform apply -auto-approve -var-file="configs.tfvars"
+        run: terraform plan -var-file="configs.tfvars" -var="is_dr=${{ github.event.inputs.is_dr }}"
+        #run: terraform apply -auto-approve -var-file="configs.tfvars" -var="is_dr=${{ github.event.inputs.is_dr }}"

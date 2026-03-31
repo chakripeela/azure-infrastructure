@@ -33,3 +33,9 @@ variable "sql_aad_admin_object_id" {
   type        = string
   description = "Object ID of the Azure AD user or group to set as SQL Server admin."
 }
+
+variable "is_dr" {
+  type        = string
+  description = "Indicates whether the deployment is for the DR region."
+  default     = "No"
+}
