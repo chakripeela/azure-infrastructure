@@ -62,6 +62,7 @@ module "app_service_dr" {
   location              = var.dr_location
   resource_group_name   = module.resource_group_dr.resource_group_name
   subnet_id             = module.virtual_network_dr.subnet_appsvc_id
+  enabled               = false
 }
 
 module "acr" {

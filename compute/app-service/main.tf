@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "plan" {
   location            = var.location
   resource_group_name = var.resource_group_name
   os_type             = "Linux"
-    sku_name            = "S1"
+    sku_name            = "B1"
 }
 
 resource "azurerm_linux_web_app" "app" {
@@ -28,4 +28,5 @@ resource "azurerm_linux_web_app" "app" {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
     "API_BASE_URL"                        = "http://10.1.2.250"
   }
+  enabled = var.enabled
 }

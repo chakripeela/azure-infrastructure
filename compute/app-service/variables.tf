@@ -10,3 +10,9 @@ variable "plan_name" {
 variable "subnet_id" {
   type = string
 }
+
+variable "enabled" {
+  description = "Whether the app service is enabled (running)."
+  type        = bool
+  default     = true
+}
