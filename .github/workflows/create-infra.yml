@@ -10,8 +10,8 @@ on:
         default: "No"
         type: choice
         options:
-          - 'No'
-          - 'Yes'
+        - No
+        - Yes
 
 permissions:
   contents: read
