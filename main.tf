@@ -91,10 +91,7 @@ module "frontdoor" {
   app_service_fqdn    = module.app_service.app_service_default_hostname
   dr_appgw_public_ip =  module.app_gateway_dr[0].appgw_public_ip
   dr_enabled         = true
-  depends_on = concat(
-  [module.app_gateway],
-  var.is_dr ? [module.app_gateway_dr[0]] : []
-)
+  depends_on = [module.app_gateway, module.app_gateway_dr]
 }
 
 # DR Modules
