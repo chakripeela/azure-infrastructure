@@ -11,15 +11,14 @@ resource "azurerm_application_gateway" "appgw" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  depends_on = compact([
-    var.appgw_nsg_id != null ? var.appgw_nsg_id : null,
-    "azurerm_network_security_group.appgw_nsg",
-    "azurerm_network_security_rule.appgw_allow_appgw_v2_inbound",
-    "azurerm_network_security_rule.appgw_allow_gateway_manager",
-    "azurerm_network_security_rule.appgw_allow_http_in",
-    "azurerm_network_security_rule.appgw_allow_https_in",
-    "azurerm_subnet_network_security_group_association.appgw_nsg_assoc"
-  ])
+  depends_on = [
+    azurerm_network_security_group.appgw_nsg,
+    azurerm_network_security_rule.appgw_allow_appgw_v2_inbound,
+    azurerm_network_security_rule.appgw_allow_gateway_manager,
+    azurerm_network_security_rule.appgw_allow_http_in,
+    azurerm_network_security_rule.appgw_allow_https_in,
+    azurerm_subnet_network_security_group_association.appgw_nsg_assoc
+  ]
 
   sku {
     name     = "Standard_v2"
