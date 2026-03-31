@@ -139,6 +139,7 @@ module "app_gateway" {
   subnet_id           = module.virtual_network.subnet_appgw_id
   app_service_fqdn    = module.app_service.app_service_default_hostname
   backend_ip          = "10.1.2.250"
+  appgw_nsg_assoc_id = module.virtual_network.appgw_nsg_assoc_id
 }
 
 # DR region App Gateway
@@ -150,6 +151,7 @@ module "app_gateway_dr" {
   subnet_id           = module.virtual_network_dr.subnet_appgw_id
   app_service_fqdn    = module.app_service_dr.app_service_default_hostname
   backend_ip          = "10.1.2.250"
+  appgw_nsg_assoc_id = module.virtual_network.appgw_nsg_assoc_id
 }
 
 module "frontdoor" {

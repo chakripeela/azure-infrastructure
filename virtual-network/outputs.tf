@@ -50,3 +50,6 @@ output "appgw_nsg_id" {
   value = azurerm_network_security_group.appgw_nsg.id
 }
 
+output "appgw_nsg_assoc_id" {
+  value = azurerm_subnet_network_security_group_association.appgw_nsg_assoc.id  
+}

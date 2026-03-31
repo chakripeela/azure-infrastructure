@@ -12,7 +12,7 @@ resource "azurerm_application_gateway" "appgw" {
   resource_group_name = var.resource_group_name
 
   depends_on = [
-    azurerm_subnet_network_security_group_association.appgw_nsg_assoc
+    var.appgw_nsg_assoc_id
   ]
 
   sku {
