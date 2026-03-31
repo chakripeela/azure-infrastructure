@@ -68,7 +68,7 @@ module "sql" {
   sql_aad_admin_object_id = var.sql_aad_admin_object_id
   sql_database_name = var.sql_database_name
   enable_failover_group   =  var.is_dr == "Yes" ? true : false
-  dr_sql_server_id        = module.sql_dr.sql_server_id
+  dr_sql_server_id        = module.sql_dr[0].sql_server_id
 }
 
 # Conditional deployment: Application Gateway or Azure Front Door
@@ -89,9 +89,12 @@ module "frontdoor" {
   location            = var.location
   resource_group_name = module.resource_group.resource_group_name
   app_service_fqdn    = module.app_service.app_service_default_hostname
-  dr_appgw_public_ip =  module.app_gateway_dr.appgw_public_ip
+  dr_appgw_public_ip =  module.app_gateway_dr[0].appgw_public_ip
   dr_enabled         = true
-  depends_on         = [ module.app_gateway, module.app_gateway_dr ]
+  depends_on = concat(
+  [module.app_gateway],
+  var.is_dr ? [module.app_gateway_dr[0]] : []
+)
 }
 
 # DR Modules
@@ -112,7 +115,7 @@ module "app_gateway_dr" {
   subnet_id           = module.virtual_network_dr[0].subnet_appgw_id
   app_service_fqdn    = module.app_service_dr[0].app_service_default_hostname
   backend_ip          = "10.1.2.250"
-  appgw_nsg_assoc_id = module.virtual_network.appgw_nsg_assoc_id
+  appgw_nsg_assoc_id = module.virtual_network_dr[0].appgw_nsg_assoc_id
 }
 
 # DR region SQL
