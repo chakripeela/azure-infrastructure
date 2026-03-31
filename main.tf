@@ -52,6 +52,7 @@ module "app_service" {
   location              = var.location
   resource_group_name   = module.resource_group.resource_group_name
   subnet_id             = module.virtual_network.subnet_appsvc_id
+  is_dr                   = true
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
 
@@ -62,6 +63,7 @@ module "app_service_dr" {
   location              = var.dr_location
   resource_group_name   = module.resource_group_dr.resource_group_name
   subnet_id             = module.virtual_network_dr.subnet_appsvc_id
+  is_dr                   = true
 }
 
 module "acr" {
