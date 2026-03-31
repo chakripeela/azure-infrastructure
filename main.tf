@@ -97,14 +97,14 @@ module "frontdoor" {
 # DR Modules
 # DR region resource group
 module "resource_group_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source           = "./resource-group"
   application_name = "${var.application_name}-dr"
   location         = var.dr_location
 }
 # DR region App Gateway
 module "app_gateway_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source              = "./compute/app-gateway"
   application_name    = "${var.application_name}-dr"
   location            = var.dr_location
@@ -117,7 +117,7 @@ module "app_gateway_dr" {
 
 # DR region SQL
 module "sql_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source                  = "./data/sql"
   application_name        = "${var.application_name}-dr"
   location                = var.dr_location
@@ -132,7 +132,7 @@ module "sql_dr" {
 
 # DR region AKS
 module "aks_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source                = "./compute/aks"
   location              = var.dr_location
   resource_group_name   = module.resource_group_dr.resource_group_name
@@ -141,7 +141,7 @@ module "aks_dr" {
 
 # DR region ACR
 module "acr_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source                = "./compute/acr"
   application_name      = "${var.application_name}-dr"
   acr_name              = "chakripeelaacrdr"
@@ -153,7 +153,7 @@ module "acr_dr" {
 
 # DR region app service
 module "app_service_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source                = "./compute/app-service"
   plan_name             = "${var.application_name}-dr-plan"
   location              = var.dr_location
@@ -164,7 +164,7 @@ module "app_service_dr" {
 
 # DR region virtual network
 module "virtual_network_dr" {
-  count = "Yes" == var.is_dr ? 1 : 0
+  count = var.is_dr ? 1 : 0
   source                = "./virtual-network"
   application_name      = "${var.application_name}-dr"
   location              = var.dr_location

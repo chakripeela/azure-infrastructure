@@ -35,7 +35,7 @@ variable "sql_aad_admin_object_id" {
 }
 
 variable "is_dr" {
-  type        = string
-  description = "Indicates whether the deployment is for the DR region."
-  default     = "No"
+  type        = bool
+  description = "Enable DR region deployment (true/false)."
+  default     = false
 }
