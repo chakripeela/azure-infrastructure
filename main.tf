@@ -89,8 +89,8 @@ module "frontdoor" {
   location            = var.location
   resource_group_name = module.resource_group.resource_group_name
   app_service_fqdn    = module.app_service.app_service_default_hostname
-  dr_appgw_public_ip =  module.app_gateway_dr[0].appgw_public_ip
-  dr_enabled         = true
+  dr_appgw_public_ip =  var.is_dr ? module.app_gateway_dr[0].appgw_public_ip : null
+  dr_enabled         = var.is_dr ? true : false
   depends_on = [module.app_gateway, module.app_gateway_dr]
 }
 
