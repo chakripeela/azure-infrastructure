@@ -58,6 +58,6 @@ jobs:
         # On push to "main", build or change infrastructure according to Terraform configuration files
         # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
       - name: Terraform Apply
-        if: ${{ lower(github.event.inputs['plan-only']) != 'yes' }}
+        if: ${{ github.event.inputs['plan-only'] != 'Yes' }}
         run: terraform plan -var-file="configs.tfvars" -var="is_dr=${{ github.event.inputs.is_dr == 'Yes' }}"
         #run: terraform apply -auto-approve -var-file="configs.tfvars" -var="is_dr=${{ github.event.inputs.is_dr == 'Yes' }}"
