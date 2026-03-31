@@ -7,11 +7,13 @@ variable "application_name" {
 variable "location" {
   description = "Azure region to deploy resources."
   type        = string
+  default     = "centralus"
 }
 
 variable "dr_location" {
   description = "Azure region for DR deployment."
   type        = string
+  default     = "eastus"
 }
 
 variable "sql_server_name" {

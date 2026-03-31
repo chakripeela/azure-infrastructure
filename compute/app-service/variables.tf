@@ -10,7 +10,3 @@ variable "plan_name" {
 variable "subnet_id" {
   type = string
 }
-variable "is_dr" {
-  type    = bool
-  default = false
-}
