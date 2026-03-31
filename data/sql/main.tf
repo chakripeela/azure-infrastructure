@@ -49,7 +49,7 @@ locals {
         ? [{
             name  = "GitHubActions-${replace(replace(cidr, ".", "-"), "/", "-")}"
             start = cidrhost(cidr, 0)
-            end   = cidrhost(cidr, pow(2, 32 - tonumber(split("/", cidr)[1])) - 1)
+            end   = cidrhost(cidr, floor(pow(2, 32 - tonumber(split("/", cidr)[1])) - 1))
           }]
         : [{
             name  = "GitHubActions-${replace(cidr, ".", "-")}"
