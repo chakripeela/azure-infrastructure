@@ -42,30 +42,11 @@ resource "azurerm_private_endpoint" "sql_private_endpoint" {
   }
 }
 
-locals {
-  github_actions_firewall_rules = flatten([
-    for cidr in var.github_actions_ips : (
-      can(regex("/", cidr))
-        ? [{
-            name  = "GitHubActions-${replace(replace(cidr, ".", "-"), "/", "-")}"
-            start = cidrhost(cidr, 0)
-            end   = cidrhost(cidr, floor(pow(2, 32 - tonumber(split("/", cidr)[1])) - 1))
-          }]
-        : [{
-            name  = "GitHubActions-${replace(cidr, ".", "-")}"
-            start = cidr
-            end   = cidr
-          }]
-    )
-  ])
-}
-
-resource "azurerm_mssql_firewall_rule" "github_actions" {
-  for_each            = { for rule in local.github_actions_firewall_rules : rule.name => rule }
-  name                = each.value.name
+resource "azurerm_mssql_firewall_rule" "allow_dacpac_ip" {
+  name                = "AllowDacpacDeployment"
   server_id           = azurerm_mssql_server.sql_server.id
-  start_ip_address    = each.value.start
-  end_ip_address      = each.value.end
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "255.255.255.255"
 }
 
 # DR/Geo-replication: Only create failover group in primary region
