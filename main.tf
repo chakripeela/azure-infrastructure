@@ -65,20 +65,20 @@ module "aks" {
   subnet_id             = module.virtual_network.subnet_aks_id
 }
 
-# module "sql" {
-#   source                  = "./data/sql"
-#   application_name        = var.application_name
-#   location                = var.location
-#   resource_group_name     = module.resource_group.resource_group_name
-#   subnet_id               = module.virtual_network.subnet_sql_id
-#   sql_private_dns_zone_id = module.virtual_network.sql_private_dns_zone_id
-#   sql_server_name         = var.sql_server_name
-#   sql_aad_admin_login     = var.sql_aad_admin_login
-#   sql_aad_admin_object_id = var.sql_aad_admin_object_id
-#   sql_database_name = var.sql_database_name
-#   enable_failover_group   =  var.is_dr ? true : false
-#   dr_sql_server_id        = var.is_dr ? module.sql_dr[0].sql_server_id : null
-# }
+module "sql" {
+  source                  = "./data/sql"
+  application_name        = var.application_name
+  location                = var.location
+  resource_group_name     = module.resource_group.resource_group_name
+  subnet_id               = module.virtual_network.subnet_sql_id
+  sql_private_dns_zone_id = module.virtual_network.sql_private_dns_zone_id
+  sql_server_name         = var.sql_server_name
+  sql_aad_admin_login     = var.sql_aad_admin_login
+  sql_aad_admin_object_id = var.sql_aad_admin_object_id
+  sql_database_name = var.sql_database_name
+  enable_failover_group   =  var.is_dr ? true : false
+  dr_sql_server_id        = var.is_dr ? module.sql_dr[0].sql_server_id : null
+}
 
 # Conditional deployment: Application Gateway or Azure Front Door
 module "app_gateway" {

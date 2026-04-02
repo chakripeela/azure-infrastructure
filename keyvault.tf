@@ -47,21 +47,21 @@ resource "azurerm_key_vault_access_policy" "aks_secrets_provider" {
   ]
 }
 
-# resource "azurerm_key_vault_secret" "db_server" {
-#   name         = "db-server"
-#   value        = module.sql.sql_server_fqdn
-#   key_vault_id = azurerm_key_vault.api_secrets.id
+resource "azurerm_key_vault_secret" "db_server" {
+  name         = "db-server"
+  value        = module.sql.sql_server_fqdn
+  key_vault_id = azurerm_key_vault.api_secrets.id
 
-#   depends_on = [time_sleep.wait_for_key_vault_policy]
-# }
+  depends_on = [time_sleep.wait_for_key_vault_policy]
+}
 
-# resource "azurerm_key_vault_secret" "db_name" {
-#   name         = "db-name"
-#   value        = module.sql.sql_database_name
-#   key_vault_id = azurerm_key_vault.api_secrets.id
+resource "azurerm_key_vault_secret" "db_name" {
+  name         = "db-name"
+  value        = module.sql.sql_database_name
+  key_vault_id = azurerm_key_vault.api_secrets.id
 
-#   depends_on = [time_sleep.wait_for_key_vault_policy]
-# }
+  depends_on = [time_sleep.wait_for_key_vault_policy]
+}
 
 resource "azurerm_key_vault_secret" "managed_identity_client_id" {
   name         = "managed-identity-client-id"
