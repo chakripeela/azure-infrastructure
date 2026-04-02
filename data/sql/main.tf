@@ -1,7 +1,7 @@
 resource "azurerm_mssql_server" "sql_server" {
   name                          = var.sql_server_name
   resource_group_name           = var.resource_group_name
-  location                      = var.location
+  location                      = var.sql_server_location
   version                       = "12.0"
   minimum_tls_version           = "1.2"
   public_network_access_enabled = false

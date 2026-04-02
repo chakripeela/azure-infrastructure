@@ -16,6 +16,18 @@ variable "dr_location" {
   default     = "eastus"
 }
 
+variable "sql_location" {
+  description = "Azure region for the primary SQL server. If null, the main deployment location is used."
+  type        = string
+  default     = null
+}
+
+variable "sql_dr_location" {
+  description = "Azure region for the DR SQL server. If null, the DR deployment location is used."
+  type        = string
+  default     = null
+}
+
 variable "sql_server_name" {
   type = string
 }

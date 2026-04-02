@@ -1,5 +1,6 @@
 application_name="todo-app"
 location = "southcentralus"
+sql_location = "centralus"
 sql_server_name   = "todoappsqlcu"
 sql_database_name = "todoappdb"
 sql_aad_admin_login      = "Chakravarthy Peela"

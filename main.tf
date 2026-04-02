@@ -69,6 +69,7 @@ module "sql" {
   source                  = "./data/sql"
   application_name        = var.application_name
   location                = var.location
+  sql_server_location     = coalesce(var.sql_location, var.location)
   resource_group_name     = module.resource_group.resource_group_name
   subnet_id               = module.virtual_network.subnet_sql_id
   sql_private_dns_zone_id = module.virtual_network.sql_private_dns_zone_id
@@ -130,6 +131,7 @@ module "sql_dr" {
   source                  = "./data/sql"
   application_name        = "${var.application_name}-dr"
   location                = var.dr_location
+  sql_server_location     = coalesce(var.sql_dr_location, var.dr_location)
   resource_group_name     = module.resource_group_dr[0].resource_group_name
   subnet_id               = module.virtual_network_dr[0].subnet_sql_id
   sql_private_dns_zone_id = module.virtual_network_dr[0].sql_private_dns_zone_id
