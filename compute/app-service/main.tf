@@ -3,7 +3,7 @@ resource "azurerm_service_plan" "plan" {
   location            = var.location
   resource_group_name = var.resource_group_name
   os_type             = "Linux"
-    sku_name            = "P0v4"
+  sku_name            = var.service_plan_sku_name
 }
 
 resource "azurerm_linux_web_app" "app" {
