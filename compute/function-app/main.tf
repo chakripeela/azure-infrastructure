@@ -8,7 +8,7 @@ locals {
 
 	storage_account_name = coalesce(
 		var.storage_account_name,
-		substr("${var.application_name}${replace(lower(var.location), " ", "")}funcsa", 0, 24)
+		substr("${replace(lower(var.application_name), "-", "")}${replace(lower(var.location), " ", "")}funcsa", 0, 24)
 	)
 }
 
