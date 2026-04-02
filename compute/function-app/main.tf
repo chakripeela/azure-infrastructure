@@ -1,5 +1,5 @@
 locals {
-	sanitized_application_name = regexreplace(lower(var.application_name), "[^a-z0-9]", "")
+	#sanitized_application_name = regexreplace(lower(var.F), "[^a-z0-9]", "")
 
 	function_app_name = coalesce(
 		var.function_app_name,
@@ -8,7 +8,7 @@ locals {
 
 	storage_account_name = coalesce(
 		var.storage_account_name,
-		substr("${local.sanitized_application_name}${replace(lower(var.location), " ", "")}funcsa", 0, 24)
+		substr("${var.application_name}${replace(lower(var.location), " ", "")}funcsa", 0, 24)
 	)
 }
 
