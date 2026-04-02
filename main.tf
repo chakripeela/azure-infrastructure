@@ -77,7 +77,7 @@ module "sql" {
   sql_aad_admin_object_id = var.sql_aad_admin_object_id
   sql_database_name = var.sql_database_name
   enable_failover_group   =  var.is_dr ? true : false
-  dr_sql_server_id        = var.is_dr ? module.sql_dr[0].sql_server_id : null
+  #dr_sql_server_id        = var.is_dr ? module.sql_dr[0].sql_server_id : null
 }
 
 # Conditional deployment: Application Gateway or Azure Front Door
