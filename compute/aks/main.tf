@@ -6,6 +6,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   default_node_pool {
     name       = "default"
+    temporary_name_for_rotation = "rotatepool"
     node_count = 1
     vm_size    = "Standard_DC2s_v3"
     os_disk_size_gb = 30
