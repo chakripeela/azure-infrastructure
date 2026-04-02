@@ -39,14 +39,14 @@ module "app_service" {
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
 
-module "function_app" {
-  source              = "./compute/function-app"
-  application_name    = var.application_name
-  location            = var.location
-  resource_group_name = module.resource_group.resource_group_name
-  service_plan_id     = module.app_service.app_service_plan_id
-  function_app_name   = "${var.application_name}-func"
-}
+# module "function_app" {
+#   source              = "./compute/function-app"
+#   application_name    = var.application_name
+#   location            = var.location
+#   resource_group_name = module.resource_group.resource_group_name
+#   service_plan_id     = module.app_service.app_service_plan_id
+#   function_app_name   = "${var.application_name}-func"
+# }
 
 module "acr" {
   source                = "./compute/acr"
@@ -174,15 +174,15 @@ module "app_service_dr" {
 }
 
 # DR region function app
-module "function_app_dr" {
-  count               = var.is_dr ? 1 : 0
-  source              = "./compute/function-app"
-  application_name    = "${var.application_name}-dr"
-  location            = var.dr_location
-  resource_group_name = module.resource_group_dr[0].resource_group_name
-  service_plan_id     = module.app_service_dr[0].app_service_plan_id
-  function_app_name   = "${var.application_name}-func-dr"
-}
+# module "function_app_dr" {
+#   count               = var.is_dr ? 1 : 0
+#   source              = "./compute/function-app"
+#   application_name    = "${var.application_name}-dr"
+#   location            = var.dr_location
+#   resource_group_name = module.resource_group_dr[0].resource_group_name
+#   service_plan_id     = module.app_service_dr[0].app_service_plan_id
+#   function_app_name   = "${var.application_name}-func-dr"
+# }
 
 # DR region virtual network
 module "virtual_network_dr" {
