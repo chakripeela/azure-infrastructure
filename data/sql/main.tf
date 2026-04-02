@@ -4,7 +4,7 @@ resource "azurerm_mssql_server" "sql_server" {
   location                      = var.location
   version                       = "12.0"
   minimum_tls_version           = "1.2"
-  public_network_access_enabled = true
+  public_network_access_enabled = false
 
   azuread_administrator {
     login_username              = var.sql_aad_admin_login
@@ -42,12 +42,12 @@ resource "azurerm_private_endpoint" "sql_private_endpoint" {
   }
 }
 
-resource "azurerm_mssql_firewall_rule" "allow_dacpac_ip" {
-  name                = "AllowDacpacDeployment"
-  server_id           = azurerm_mssql_server.sql_server.id
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "255.255.255.255"
-}
+# resource "azurerm_mssql_firewall_rule" "allow_dacpac_ip" {
+#   name                = "AllowDacpacDeployment"
+#   server_id           = azurerm_mssql_server.sql_server.id
+#   start_ip_address    = "0.0.0.0"
+#   end_ip_address      = "255.255.255.255"
+# }
 
 # DR/Geo-replication: Only create failover group in primary region
 resource "azurerm_mssql_failover_group" "sql_failover_group" {
