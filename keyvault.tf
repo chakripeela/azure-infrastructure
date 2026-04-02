@@ -1,8 +1,8 @@
 data "azurerm_client_config" "current" {}
 
 locals {
-  key_vault_application_name = regexreplace(lower(var.application_name), "[^a-z0-9]", "")
-  key_vault_location_name    = regexreplace(lower(var.location), "[^a-z0-9]", "")
+  key_vault_application_name = replace(lower(var.application_name), "/[^a-z0-9]/", "")
+  key_vault_location_name    = replace(lower(var.location), "/[^a-z0-9]/", "")
   key_vault_name             = substr("kv${local.key_vault_application_name}${local.key_vault_location_name}${substr(replace(lower(data.azurerm_client_config.current.subscription_id), "-", ""), 0, 6)}", 0, 24)
 }
 
