@@ -3,7 +3,7 @@ output "sql_server_id" {
 }
 
 output "sql_database_id" {
-  value = azurerm_mssql_database.sql_database.id
+  value = var.create_database ? azurerm_mssql_database.sql_database[0].id : null
 }
 
 output "sql_server_fqdn" {
@@ -11,5 +11,5 @@ output "sql_server_fqdn" {
 }
 
 output "sql_database_name" {
-  value = azurerm_mssql_database.sql_database.name
+  value = var.create_database ? azurerm_mssql_database.sql_database[0].name : null
 }

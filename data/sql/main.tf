@@ -14,6 +14,7 @@ resource "azurerm_mssql_server" "sql_server" {
 }
 
 resource "azurerm_mssql_database" "sql_database" {
+  count          = var.create_database ? 1 : 0
   name           = var.sql_database_name
   server_id      = azurerm_mssql_server.sql_server.id
   collation      = "SQL_Latin1_General_CP1_CI_AS"
@@ -51,15 +52,14 @@ resource "azurerm_private_endpoint" "sql_private_endpoint" {
 
 # DR/Geo-replication: Only create failover group in primary region
 resource "azurerm_mssql_failover_group" "sql_failover_group" {
-  count                 = var.enable_failover_group ? 1 : 0
+  count                 = var.enable_failover_group && var.create_database ? 1 : 0
   name                  = "failover-group-${var.application_name}"
   server_id             = azurerm_mssql_server.sql_server.id
-  databases             = [azurerm_mssql_database.sql_database.id]
+  databases             = [azurerm_mssql_database.sql_database[0].id]
   partner_server {
     id = var.dr_sql_server_id
   }
   read_write_endpoint_failover_policy {
-    mode          = "Automatic"
-    grace_minutes = 60
+    mode = "Manual"
   }
 }

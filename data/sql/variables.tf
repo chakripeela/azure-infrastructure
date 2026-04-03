@@ -44,6 +44,12 @@ variable "enable_failover_group" {
   type    = bool
   default = false
 }
+
+variable "create_database" {
+  type    = bool
+  default = true
+}
+
 variable "dr_sql_server_id" {
   type    = string
   default = ""

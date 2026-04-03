@@ -139,6 +139,7 @@ module "sql_dr" {
   sql_database_name       = "${var.sql_database_name}-dr"
   sql_aad_admin_login     = var.sql_aad_admin_login
   sql_aad_admin_object_id = var.sql_aad_admin_object_id
+  create_database         = false
 }
 
 # DR region AKS
