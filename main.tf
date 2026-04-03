@@ -5,6 +5,11 @@ terraform {
       version = "4.55.0"
     }
 
+    azapi = {
+      source  = "Azure/azapi"
+      version = "~> 2.0"
+    }
+
     time = {
       source  = "hashicorp/time"
       version = "0.12.1"
@@ -15,6 +20,8 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+provider "azapi" {}
 
 module "resource_group" {
   source           = "./resource-group"

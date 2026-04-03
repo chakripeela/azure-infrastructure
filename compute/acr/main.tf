@@ -11,12 +11,18 @@ resource "azurerm_container_registry" "acr" {
   }
 }
 
-resource "azurerm_container_registry_replication" "replica" {
-  for_each            = toset(var.geo_replication_locations)
-  name                = each.value
-  location            = each.value
-  registry_name       = azurerm_container_registry.acr.name
-  resource_group_name = var.resource_group_name
+resource "azapi_resource" "replica" {
+  for_each  = toset(var.geo_replication_locations)
+  type      = "Microsoft.ContainerRegistry/registries/replications@2025-11-01"
+  name      = each.value
+  parent_id = azurerm_container_registry.acr.id
+  location  = each.value
+
+  body = {
+    properties = {
+      regionEndpointEnabled = true
+    }
+  }
 }
 
 resource "azurerm_private_endpoint" "acr_private_endpoint" {
