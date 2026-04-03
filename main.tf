@@ -49,13 +49,13 @@ module "app_service" {
 # }
 
 module "acr" {
-  source                  = "./compute/acr"
-  application_name        = var.application_name
-  acr_name                = "chakripeelaacr"
-  location                = var.location
-  resource_group_name     = module.resource_group.resource_group_name
-  subnet_id               = module.virtual_network.subnet_acr_private_endpoint_id
-  acr_private_dns_zone_id = module.virtual_network.acr_private_dns_zone_id
+  source              = "./compute/acr"
+  application_name    = var.application_name
+  acr_name            = "chakripeelaacr"
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+  # subnet_id               = module.virtual_network.subnet_acr_private_endpoint_id
+  # acr_private_dns_zone_id = module.virtual_network.acr_private_dns_zone_id
 }
 
 module "aks" {
@@ -187,11 +187,10 @@ module "app_service_dr" {
 
 # DR region virtual network
 module "virtual_network_dr" {
-  count                       = var.is_dr ? 1 : 0
-  source                      = "./virtual-network"
-  application_name            = "${var.application_name}-dr"
-  location                    = var.dr_location
-  resource_group_name         = module.resource_group_dr[0].resource_group_name
-  shared_resource_group       = module.resource_group_dr[0].shared_resource_group_name
-  create_acr_private_dns_zone = false
+  count                 = var.is_dr ? 1 : 0
+  source                = "./virtual-network"
+  application_name      = "${var.application_name}-dr"
+  location              = var.dr_location
+  resource_group_name   = module.resource_group_dr[0].resource_group_name
+  shared_resource_group = module.resource_group_dr[0].shared_resource_group_name
 }

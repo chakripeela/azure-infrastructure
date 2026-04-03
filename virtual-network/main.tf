@@ -51,14 +51,14 @@ resource "azurerm_subnet" "aks_subnet" {
   address_prefixes     = ["10.1.2.0/24"]
 }
 
-resource "azurerm_subnet" "acr_private_endpoint_subnet" {
-  name                 = "snet-acr-pe-${var.application_name}"
-  resource_group_name  = var.resource_group_name
-  virtual_network_name = azurerm_virtual_network.vnet_backend.name
-  address_prefixes     = ["10.1.3.0/24"]
-
-  private_endpoint_network_policies = "Disabled"
-}
+# resource "azurerm_subnet" "acr_private_endpoint_subnet" {
+#   name                 = "snet-acr-pe-${var.application_name}"
+#   resource_group_name  = var.resource_group_name
+#   virtual_network_name = azurerm_virtual_network.vnet_backend.name
+#   address_prefixes     = ["10.1.3.0/24"]
+#
+#   private_endpoint_network_policies = "Disabled"
+# }
 
 resource "azurerm_subnet" "appgw_subnet" {
   name                 = "snet-appgw-${var.application_name}"
@@ -190,14 +190,12 @@ resource "azurerm_private_dns_zone_virtual_network_link" "sql_database_dns_zone_
   virtual_network_id    = azurerm_virtual_network.vnet_backend.id
 }
 
-resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_zone_backend_link" {
-  count = var.create_acr_private_dns_zone ? 1 : 0
-
-  name                  = "vnet-backend-acr-dns-link-${var.application_name}"
-  resource_group_name   = var.shared_resource_group
-  private_dns_zone_name = azurerm_private_dns_zone.acr_dns_zone[0].name
-  virtual_network_id    = azurerm_virtual_network.vnet_backend.id
-}
+# resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_zone_backend_link" {
+#   name                  = "vnet-backend-acr-dns-link-${var.application_name}"
+#   resource_group_name   = var.shared_resource_group
+#   private_dns_zone_name = azurerm_private_dns_zone.acr_dns_zone.name
+#   virtual_network_id    = azurerm_virtual_network.vnet_backend.id
+# }
 
 resource "azurerm_subnet_network_security_group_association" "aks_nsg_assoc" {
   subnet_id                 = azurerm_subnet.aks_subnet.id
@@ -205,19 +203,19 @@ resource "azurerm_subnet_network_security_group_association" "aks_nsg_assoc" {
 }
 
 resource "azurerm_virtual_network_peering" "frontend_to_backend" {
-  name                      = "peer-frontend-to-backend-${var.application_name}"
-  resource_group_name       = var.resource_group_name
-  virtual_network_name      = azurerm_virtual_network.vnet_frontend.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet_backend.id
+  name                         = "peer-frontend-to-backend-${var.application_name}"
+  resource_group_name          = var.resource_group_name
+  virtual_network_name         = azurerm_virtual_network.vnet_frontend.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_backend.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
 
 resource "azurerm_virtual_network_peering" "backend_to_frontend" {
-  name                      = "peer-backend-to-frontend-${var.application_name}"
-  resource_group_name       = var.resource_group_name
-  virtual_network_name      = azurerm_virtual_network.vnet_backend.name
-  remote_virtual_network_id = azurerm_virtual_network.vnet_frontend.id
+  name                         = "peer-backend-to-frontend-${var.application_name}"
+  resource_group_name          = var.resource_group_name
+  virtual_network_name         = azurerm_virtual_network.vnet_backend.name
+  remote_virtual_network_id    = azurerm_virtual_network.vnet_frontend.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }

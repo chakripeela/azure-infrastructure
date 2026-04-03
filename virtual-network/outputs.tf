@@ -18,16 +18,8 @@ output "subnet_aks_id" {
   value = azurerm_subnet.aks_subnet.id
 }
 
-output "subnet_acr_private_endpoint_id" {
-  value = azurerm_subnet.acr_private_endpoint_subnet.id
-}
-
 output "sql_private_dns_zone_id" {
   value = azurerm_private_dns_zone.sql_database_dns_zone.id
-}
-
-output "acr_private_dns_zone_id" {
-  value = var.create_acr_private_dns_zone ? azurerm_private_dns_zone.acr_dns_zone[0].id : null
 }
 
 output "subnet_appgw_id" {
@@ -51,5 +43,5 @@ output "appgw_nsg_id" {
 }
 
 output "appgw_nsg_assoc_id" {
-  value = azurerm_subnet_network_security_group_association.appgw_nsg_assoc.id  
+  value = azurerm_subnet_network_security_group_association.appgw_nsg_assoc.id
 }

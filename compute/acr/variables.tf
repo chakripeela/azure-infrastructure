@@ -14,9 +14,11 @@ variable "application_name" {
 }
 
 variable "subnet_id" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "acr_private_dns_zone_id" {
-  type = string
+  type    = string
+  default = null
 }
