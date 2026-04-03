@@ -31,11 +31,11 @@ module "virtual_network" {
 }
 
 module "app_service" {
-  source                = "./compute/app-service"
-  plan_name             = "${var.application_name}-plan"
-  location              = var.location
-  resource_group_name   = module.resource_group.resource_group_name
-  subnet_id             = module.virtual_network.subnet_appsvc_id
+  source              = "./compute/app-service"
+  plan_name           = "${var.application_name}-plan"
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+  subnet_id           = module.virtual_network.subnet_appsvc_id
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
 
@@ -49,20 +49,20 @@ module "app_service" {
 # }
 
 module "acr" {
-  source                = "./compute/acr"
-  application_name      = var.application_name
-  acr_name              = "chakripeelaacr"
-  location              = var.location
-  resource_group_name   = module.resource_group.resource_group_name
-  subnet_id             = module.virtual_network.subnet_acr_private_endpoint_id
+  source                  = "./compute/acr"
+  application_name        = var.application_name
+  acr_name                = "chakripeelaacr"
+  location                = var.location
+  resource_group_name     = module.resource_group.resource_group_name
+  subnet_id               = module.virtual_network.subnet_acr_private_endpoint_id
   acr_private_dns_zone_id = module.virtual_network.acr_private_dns_zone_id
 }
 
 module "aks" {
-  source                = "./compute/aks"
-  location              = var.location
-  resource_group_name   = module.resource_group.resource_group_name
-  subnet_id             = module.virtual_network.subnet_aks_id
+  source              = "./compute/aks"
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+  subnet_id           = module.virtual_network.subnet_aks_id
 }
 
 module "sql" {
@@ -76,8 +76,8 @@ module "sql" {
   sql_server_name         = var.sql_server_name
   sql_aad_admin_login     = var.sql_aad_admin_login
   sql_aad_admin_object_id = var.sql_aad_admin_object_id
-  sql_database_name = var.sql_database_name
-  enable_failover_group   =  var.is_dr ? true : false
+  sql_database_name       = var.sql_database_name
+  enable_failover_group   = var.is_dr ? true : false
   dr_sql_server_id        = var.is_dr ? module.sql_dr[0].sql_server_id : null
 }
 
@@ -90,7 +90,7 @@ module "app_gateway" {
   subnet_id           = module.virtual_network.subnet_appgw_id
   app_service_fqdn    = module.app_service.app_service_default_hostname
   backend_ip          = "10.1.2.250"
-  appgw_nsg_assoc_id = module.virtual_network.appgw_nsg_assoc_id
+  appgw_nsg_assoc_id  = module.virtual_network.appgw_nsg_assoc_id
 }
 
 module "frontdoor" {
@@ -99,22 +99,22 @@ module "frontdoor" {
   location            = var.location
   resource_group_name = module.resource_group.resource_group_name
   app_service_fqdn    = module.app_service.app_service_default_hostname
-  dr_appgw_public_ip =  var.is_dr ? module.app_gateway_dr[0].appgw_public_ip : null
-  dr_enabled         = var.is_dr ? true : false
-  depends_on = [module.app_gateway, module.app_gateway_dr]
+  dr_appgw_public_ip  = var.is_dr ? module.app_gateway_dr[0].appgw_public_ip : null
+  dr_enabled          = var.is_dr ? true : false
+  depends_on          = [module.app_gateway, module.app_gateway_dr]
 }
 
 # DR Modules
 # DR region resource group
 module "resource_group_dr" {
-  count = var.is_dr ? 1 : 0
+  count            = var.is_dr ? 1 : 0
   source           = "./resource-group"
   application_name = "${var.application_name}-dr"
   location         = var.dr_location
 }
 # DR region App Gateway
 module "app_gateway_dr" {
-  count = var.is_dr ? 1 : 0
+  count               = var.is_dr ? 1 : 0
   source              = "./compute/app-gateway"
   application_name    = "${var.application_name}-dr"
   location            = var.dr_location
@@ -122,12 +122,12 @@ module "app_gateway_dr" {
   subnet_id           = module.virtual_network_dr[0].subnet_appgw_id
   app_service_fqdn    = module.app_service_dr[0].app_service_default_hostname
   backend_ip          = "10.1.2.250"
-  appgw_nsg_assoc_id = module.virtual_network_dr[0].appgw_nsg_assoc_id
+  appgw_nsg_assoc_id  = module.virtual_network_dr[0].appgw_nsg_assoc_id
 }
 
 # DR region SQL
 module "sql_dr" {
-  count = var.is_dr ? 1 : 0
+  count                   = var.is_dr ? 1 : 0
   source                  = "./data/sql"
   application_name        = "${var.application_name}-dr"
   location                = var.dr_location
@@ -144,11 +144,11 @@ module "sql_dr" {
 
 # DR region AKS
 module "aks_dr" {
-  count = var.is_dr ? 1 : 0
-  source                = "./compute/aks"
-  location              = var.dr_location
-  resource_group_name   = module.resource_group_dr[0].resource_group_name
-  subnet_id             = module.virtual_network_dr[0].subnet_aks_id
+  count               = var.is_dr ? 1 : 0
+  source              = "./compute/aks"
+  location            = var.dr_location
+  resource_group_name = module.resource_group_dr[0].resource_group_name
+  subnet_id           = module.virtual_network_dr[0].subnet_aks_id
 }
 
 # DR region ACR
@@ -165,13 +165,13 @@ module "aks_dr" {
 
 # DR region app service
 module "app_service_dr" {
-  count = var.is_dr ? 1 : 0
-  source                = "./compute/app-service"
-  plan_name             = "${var.application_name}-dr-plan"
-  location              = var.dr_location
-  resource_group_name   = module.resource_group_dr[0].resource_group_name
-  subnet_id             = module.virtual_network_dr[0].subnet_appsvc_id
-  enabled               = var.dr_app_service_enabled
+  count               = var.is_dr ? 1 : 0
+  source              = "./compute/app-service"
+  plan_name           = "${var.application_name}-dr-plan"
+  location            = var.dr_location
+  resource_group_name = module.resource_group_dr[0].resource_group_name
+  subnet_id           = module.virtual_network_dr[0].subnet_appsvc_id
+  enabled             = var.dr_app_service_enabled
 }
 
 # DR region function app
@@ -187,10 +187,11 @@ module "app_service_dr" {
 
 # DR region virtual network
 module "virtual_network_dr" {
-  count = var.is_dr ? 1 : 0
-  source                = "./virtual-network"
-  application_name      = "${var.application_name}-dr"
-  location              = var.dr_location
-  resource_group_name   = module.resource_group_dr[0].resource_group_name
-  shared_resource_group = module.resource_group_dr[0].shared_resource_group_name
+  count                       = var.is_dr ? 1 : 0
+  source                      = "./virtual-network"
+  application_name            = "${var.application_name}-dr"
+  location                    = var.dr_location
+  resource_group_name         = module.resource_group_dr[0].resource_group_name
+  shared_resource_group       = module.resource_group_dr[0].shared_resource_group_name
+  create_acr_private_dns_zone = false
 }

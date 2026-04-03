@@ -9,4 +9,9 @@
 errored.tfstate
 ai-foundry/test.py
 .vs/
+LICENSE.txt
+terraform-provider-azurerm*
+terraform-provider-time*
+
+
 

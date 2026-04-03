@@ -191,9 +191,11 @@ resource "azurerm_private_dns_zone_virtual_network_link" "sql_database_dns_zone_
 }
 
 resource "azurerm_private_dns_zone_virtual_network_link" "acr_dns_zone_backend_link" {
+  count = var.create_acr_private_dns_zone ? 1 : 0
+
   name                  = "vnet-backend-acr-dns-link-${var.application_name}"
   resource_group_name   = var.shared_resource_group
-  private_dns_zone_name = azurerm_private_dns_zone.acr_dns_zone.name
+  private_dns_zone_name = azurerm_private_dns_zone.acr_dns_zone[0].name
   virtual_network_id    = azurerm_virtual_network.vnet_backend.id
 }
 

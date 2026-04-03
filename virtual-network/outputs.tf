@@ -27,7 +27,7 @@ output "sql_private_dns_zone_id" {
 }
 
 output "acr_private_dns_zone_id" {
-  value = azurerm_private_dns_zone.acr_dns_zone.id
+  value = var.create_acr_private_dns_zone ? azurerm_private_dns_zone.acr_dns_zone[0].id : null
 }
 
 output "subnet_appgw_id" {
