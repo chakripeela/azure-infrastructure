@@ -51,3 +51,9 @@ variable "is_dr" {
   description = "Enable DR region deployment (true/false)."
   default     = false
 }
+
+variable "dr_app_service_enabled" {
+  type        = bool
+  description = "Whether the DR App Service should remain enabled and running."
+  default     = false
+}

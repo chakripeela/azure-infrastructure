@@ -171,7 +171,7 @@ module "app_service_dr" {
   location              = var.dr_location
   resource_group_name   = module.resource_group_dr[0].resource_group_name
   subnet_id             = module.virtual_network_dr[0].subnet_appsvc_id
-  enabled               = false
+  enabled               = var.dr_app_service_enabled
 }
 
 # DR region function app
