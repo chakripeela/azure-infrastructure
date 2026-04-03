@@ -56,6 +56,11 @@ module "acr" {
   resource_group_name   = module.resource_group.resource_group_name
   subnet_id             = module.virtual_network.subnet_acr_private_endpoint_id
   acr_private_dns_zone_id = module.virtual_network.acr_private_dns_zone_id
+  geo_replication_locations = var.is_dr ? [var.dr_location] : []
+  dr_location              = var.is_dr ? var.dr_location : null
+  dr_resource_group_name   = var.is_dr ? module.resource_group_dr[0].resource_group_name : null
+  dr_subnet_id             = var.is_dr ? module.virtual_network_dr[0].subnet_acr_private_endpoint_id : null
+  dr_acr_private_dns_zone_id = var.is_dr ? module.virtual_network_dr[0].acr_private_dns_zone_id : null
 }
 
 module "aks" {
@@ -149,18 +154,6 @@ module "aks_dr" {
   location              = var.dr_location
   resource_group_name   = module.resource_group_dr[0].resource_group_name
   subnet_id             = module.virtual_network_dr[0].subnet_aks_id
-}
-
-# DR region ACR
-module "acr_dr" {
-  count = var.is_dr ? 1 : 0
-  source                = "./compute/acr"
-  application_name      = "${var.application_name}-dr"
-  acr_name              = "chakripeelaacrdr"
-  location              = var.dr_location
-  resource_group_name   = module.resource_group_dr[0].resource_group_name
-  subnet_id             = module.virtual_network_dr[0].subnet_acr_private_endpoint_id
-  acr_private_dns_zone_id = module.virtual_network_dr[0].acr_private_dns_zone_id
 }
 
 # DR region app service
