@@ -39,23 +39,12 @@ module "app_service" {
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
 
-# module "function_app" {
-#   source              = "./compute/function-app"
-#   application_name    = var.application_name
-#   location            = var.location
-#   resource_group_name = module.resource_group.resource_group_name
-#   service_plan_id     = module.app_service.app_service_plan_id
-#   function_app_name   = "${var.application_name}-func"
-# }
-
 module "acr" {
   source              = "./compute/acr"
   application_name    = var.application_name
   acr_name            = "chakripeelaacr"
   location            = var.location
   resource_group_name = module.resource_group.resource_group_name
-  # subnet_id               = module.virtual_network.subnet_acr_private_endpoint_id
-  # acr_private_dns_zone_id = module.virtual_network.acr_private_dns_zone_id
 }
 
 module "aks" {
@@ -161,17 +150,6 @@ module "app_service_dr" {
   subnet_id           = module.virtual_network_dr[0].subnet_appsvc_id
   enabled             = var.dr_app_service_enabled
 }
-
-# DR region function app
-# module "function_app_dr" {
-#   count               = var.is_dr ? 1 : 0
-#   source              = "./compute/function-app"
-#   application_name    = "${var.application_name}-dr"
-#   location            = var.dr_location
-#   resource_group_name = module.resource_group_dr[0].resource_group_name
-#   service_plan_id     = module.app_service_dr[0].app_service_plan_id
-#   function_app_name   = "${var.application_name}-func-dr"
-# }
 
 # DR region virtual network
 module "virtual_network_dr" {

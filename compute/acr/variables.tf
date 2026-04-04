@@ -12,13 +12,3 @@ variable "location" {
 variable "application_name" {
   type = string
 }
-
-variable "subnet_id" {
-  type    = string
-  default = null
-}
-
-variable "acr_private_dns_zone_id" {
-  type    = string
-  default = null
-}
