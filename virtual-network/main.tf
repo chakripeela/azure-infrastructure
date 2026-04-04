@@ -109,7 +109,7 @@ resource "azurerm_network_security_rule" "appgw_allow_http_in" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "80"
-  source_address_prefix       = "Internet"
+  source_address_prefix       = "AzureFrontDoor.Backend"
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.appgw_nsg.name
@@ -123,7 +123,7 @@ resource "azurerm_network_security_rule" "appgw_allow_https_in" {
   protocol                    = "Tcp"
   source_port_range           = "*"
   destination_port_range      = "443"
-  source_address_prefix       = "Internet"
+  source_address_prefix       = "AzureFrontDoor.Backend"
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.appgw_nsg.name
