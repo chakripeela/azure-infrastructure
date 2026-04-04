@@ -1,8 +1,8 @@
 resource "azurerm_kubernetes_cluster" "aks" {
-  name                = "aks-todoapp"
+  name                = "aks-todoapp-${var.location}"
   location            = var.location
   resource_group_name = var.resource_group_name
-  dns_prefix          = "aks-todoapp-dns"
+  dns_prefix          = "aks-todoapp-dns-${var.location}"
 
   default_node_pool {
     name       = "default"
