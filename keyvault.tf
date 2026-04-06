@@ -8,7 +8,7 @@ locals {
         location                       = var.location
         resource_group_name            = module.resource_group.resource_group_name
         aks_secrets_provider_object_id = module.aks.key_vault_secrets_provider_object_id
-        db_server                      = module.sql.sql_server_fqdn
+        db_server                      = var.is_dr ? module.sql.sql_failover_group_fqdn : module.sql.sql_server_fqdn
         db_name                        = module.sql.sql_database_name
         managed_identity_client_id     = module.aks.kubelet_client_id
       }
@@ -19,7 +19,7 @@ locals {
         location                       = var.dr_location
         resource_group_name            = module.resource_group_dr[0].resource_group_name
         aks_secrets_provider_object_id = module.aks_dr[0].key_vault_secrets_provider_object_id
-        db_server                      = module.sql_dr[0].sql_server_fqdn
+        db_server                      = module.sql.sql_failover_group_fqdn
         db_name                        = module.sql.sql_database_name
         managed_identity_client_id     = module.aks_dr[0].kubelet_client_id
       }

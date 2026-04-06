@@ -10,6 +10,10 @@ output "sql_server_fqdn" {
   value = azurerm_mssql_server.sql_server.fully_qualified_domain_name
 }
 
+output "sql_failover_group_fqdn" {
+  value = var.enable_failover_group && var.create_database ? "${azurerm_mssql_failover_group.sql_failover_group[0].name}.database.windows.net" : null
+}
+
 output "sql_database_name" {
   value = var.create_database ? azurerm_mssql_database.sql_database[0].name : null
 }
