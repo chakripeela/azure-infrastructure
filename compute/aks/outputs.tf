@@ -28,13 +28,31 @@ output "key_vault_secrets_provider_client_id" {
 }
 
 output "kube_config" {
-  description = "Kubernetes cluster config for provider configuration"
-  value       = azurerm_kubernetes_cluster.aks.kube_config_raw
+  description = "Kubernetes cluster kube_config"
+  value       = azurerm_kubernetes_cluster.aks.kube_config
   sensitive   = true
 }
 
 output "host" {
   description = "Kubernetes cluster API server URL"
   value       = azurerm_kubernetes_cluster.aks.kube_config[0].host
+  sensitive   = true
+}
+
+output "client_certificate" {
+  description = "Client certificate from kube_config"
+  value       = azurerm_kubernetes_cluster.aks.kube_config[0].client_certificate
+  sensitive   = true
+}
+
+output "client_key" {
+  description = "Client key from kube_config"
+  value       = azurerm_kubernetes_cluster.aks.kube_config[0].client_key
+  sensitive   = true
+}
+
+output "cluster_ca_certificate" {
+  description = "Cluster CA certificate from kube_config"
+  value       = azurerm_kubernetes_cluster.aks.kube_config[0].cluster_ca_certificate
   sensitive   = true
 }
