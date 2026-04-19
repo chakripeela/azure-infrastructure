@@ -62,11 +62,11 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
   target_resource_id         = azurerm_mssql_server.sql_server.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
-  enabled_log {
-    category = "AutomaticTuning"
-  }
+  # enabled_log {
+  #   category = "AutomaticTuning"
+  # }
 
-  enabled_log {
-    category = "Timeouts"
-  }
+  # enabled_log {
+  #   category = "Timeouts"
+  # }
 }
