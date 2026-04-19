@@ -84,7 +84,7 @@ resource "azurerm_cdn_frontdoor_route" "main" {
 
 # WAF Policy for Front Door
 resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
-  name                = "fd-waf-${var.application_name}-${var.location}"
+  name                = "fdwaf${replace(var.application_name, "-", "")}${var.location}"
   resource_group_name = var.resource_group_name
   sku_name            = azurerm_cdn_frontdoor_profile.main.sku_name
   enabled             = true
@@ -105,7 +105,7 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
 
 # Security Policy to associate WAF with endpoint
 resource "azurerm_cdn_frontdoor_security_policy" "waf_policy" {
-  name                     = "fd-security-${var.application_name}-${var.location}"
+  name                     = "fdsecurity${replace(var.application_name, "-", "")}${var.location}"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.main.id
 
   security_policies {
