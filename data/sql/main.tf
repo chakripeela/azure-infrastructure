@@ -66,9 +66,9 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
     category = "AutomaticTuning"
   }
 
-  enabled_log {
-    category = "QueryStoreRuntimeStatistics"
-  }
+  # enabled_log {
+  #   category = "QueryStoreRuntimeStatistics"
+  # }
 
   enabled_log {
     category = "QueryStoreWaitStatistics"

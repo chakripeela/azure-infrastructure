@@ -73,7 +73,7 @@ module "app_service" {
   location            = var.location
   resource_group_name = module.resource_group.resource_group_name
   subnet_id           = module.virtual_network.subnet_appsvc_id
-  api_internal_ip     = local.aks_api_internal_ip_final
+  api_internal_ip     = var.aks_api_internal_ip
   #shared_resource_group = module.resource_group.shared_resource_group_name
 }
 
@@ -94,20 +94,9 @@ module "aks" {
   log_analytics_workspace_id = module.log_analytics.workspace_id
 }
 
-# Query the dynamically assigned LoadBalancer IP for the todo-api service
-data "kubernetes_service" "todo_api" {
-  depends_on = [module.aks]
-
-  metadata {
-    name      = "todo-api"
-    namespace = "default"
-  }
-}
-
-locals {
-  aks_api_internal_ip_discovered = try(data.kubernetes_service.todo_api.status[0].load_balancer[0].ingress[0].ip, null)
-  aks_api_internal_ip_final      = local.aks_api_internal_ip_discovered != null ? local.aks_api_internal_ip_discovered : var.aks_api_internal_ip
-}
+# Note: The todo-api LoadBalancer service IP is managed by the application deployment
+# and configured via the aks_api_internal_ip variable. Dynamic discovery removed
+# since the service is created post-Terraform deployment.
 
 module "sql" {
   source                     = "./data/sql"
@@ -134,7 +123,7 @@ module "app_gateway" {
   resource_group_name        = module.resource_group.resource_group_name
   subnet_id                  = module.virtual_network.subnet_appgw_id
   app_service_fqdn           = module.app_service.app_service_default_hostname
-  backend_ip                 = local.aks_api_internal_ip_final
+  backend_ip                 = var.aks_api_internal_ip
   appgw_nsg_assoc_id         = module.virtual_network.appgw_nsg_assoc_id
   log_analytics_workspace_id = module.log_analytics.workspace_id
 }
@@ -168,7 +157,7 @@ module "app_gateway_dr" {
   resource_group_name        = module.resource_group_dr[0].resource_group_name
   subnet_id                  = module.virtual_network_dr[0].subnet_appgw_id
   app_service_fqdn           = module.app_service_dr[0].app_service_default_hostname
-  backend_ip                 = local.aks_api_internal_ip_final
+  backend_ip                 = var.aks_api_internal_ip
   appgw_nsg_assoc_id         = module.virtual_network_dr[0].appgw_nsg_assoc_id
   log_analytics_workspace_id = module.log_analytics.workspace_id
 }
@@ -209,7 +198,7 @@ module "app_service_dr" {
   location            = var.dr_location
   resource_group_name = module.resource_group_dr[0].resource_group_name
   subnet_id           = module.virtual_network_dr[0].subnet_appsvc_id
-  api_internal_ip     = local.aks_api_internal_ip_final
+  api_internal_ip     = var.aks_api_internal_ip
   enabled             = var.dr_app_service_enabled
 }
 
