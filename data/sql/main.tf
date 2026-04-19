@@ -66,36 +66,11 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
     category = "AutomaticTuning"
   }
 
-  # enabled_log {
-  #   category = "QueryStoreRuntimeStatistics"
-  # }
-
-  # enabled_log {
-  #   category = "QueryStoreWaitStatistics"
-  # }
-
   enabled_log {
     category = "Errors"
   }
 
   enabled_log {
-    category = "DatabaseWaitStatistics"
-  }
-
-  enabled_log {
     category = "Timeouts"
   }
-
-  # enabled_log {
-  #   category = "Blocks"
-  # }
-
-  # enabled_log {
-  #   category = "Deadlocks"
-  # }
-
-  # metric {
-  #   category = "AllMetrics"
-  #   enabled  = true
-  # }
 }

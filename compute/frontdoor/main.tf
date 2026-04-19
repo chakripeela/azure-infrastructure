@@ -101,7 +101,14 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
       match_variable     = "QueryString"
       operator           = "Contains"
       negation_condition = false
-      match_values       = ["'", "\"", ";", "--", "/*", "*/", "xp_", "sp_", "exec", "union", "select", "insert", "update", "delete", "drop", "create", "alter"]
+      match_values       = ["'", "\"", ";", "--", "/*", "*/", "xp_", "sp_", "exec", "union"]
+    }
+
+    match_condition {
+      match_variable     = "QueryString"
+      operator           = "Contains"
+      negation_condition = false
+      match_values       = ["select", "insert", "update", "delete", "drop", "create", "alter"]
     }
   }
 
