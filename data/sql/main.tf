@@ -86,9 +86,9 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
     category = "Timeouts"
   }
 
-  enabled_log {
-    category = "Blocks"
-  }
+  # enabled_log {
+  #   category = "Blocks"
+  # }
 
   # enabled_log {
   #   category = "Deadlocks"
