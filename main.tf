@@ -22,6 +22,21 @@ module "resource_group" {
   location         = var.location
 }
 
+# Dedicated App Identity
+resource "azurerm_user_assigned_identity" "app_identity" {
+  name                = "${var.application_name}-api-identity"
+  location            = var.location
+  resource_group_name = module.resource_group.resource_group_name
+}
+
+# DR App Identity
+resource "azurerm_user_assigned_identity" "app_identity_dr" {
+  count               = var.is_dr ? 1 : 0
+  name                = "${var.application_name}-dr-api-identity"
+  location            = var.dr_location
+  resource_group_name = module.resource_group_dr[0].resource_group_name
+}
+
 module "log_analytics" {
   source                          = "./common/log-analytics"
   location                        = var.location
@@ -75,8 +90,8 @@ module "sql" {
   subnet_id                  = module.virtual_network.subnet_sql_id
   sql_private_dns_zone_id    = module.virtual_network.sql_private_dns_zone_id
   sql_server_name            = var.sql_server_name
-  sql_aad_admin_login        = var.sql_aad_admin_login
-  sql_aad_admin_object_id    = var.sql_aad_admin_object_id
+  sql_aad_admin_login        = azurerm_user_assigned_identity.app_identity.name
+  sql_aad_admin_object_id    = azurerm_user_assigned_identity.app_identity.principal_id
   sql_database_name          = var.sql_database_name
   enable_failover_group      = var.is_dr ? true : false
   dr_sql_server_id           = var.is_dr ? module.sql_dr[0].sql_server_id : null
@@ -142,8 +157,8 @@ module "sql_dr" {
   sql_private_dns_zone_id    = module.virtual_network_dr[0].sql_private_dns_zone_id
   sql_server_name            = "${var.sql_server_name}-dr"
   sql_database_name          = "${var.sql_database_name}-dr"
-  sql_aad_admin_login        = var.sql_aad_admin_login
-  sql_aad_admin_object_id    = var.sql_aad_admin_object_id
+  sql_aad_admin_login        = azurerm_user_assigned_identity.app_identity_dr[0].name
+  sql_aad_admin_object_id    = azurerm_user_assigned_identity.app_identity_dr[0].principal_id
   create_database            = false
   log_analytics_workspace_id = module.log_analytics_dr[0].workspace_id
 }

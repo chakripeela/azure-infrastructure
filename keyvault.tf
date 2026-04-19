@@ -10,7 +10,7 @@ locals {
         aks_secrets_provider_object_id = module.aks.key_vault_secrets_provider_object_id
         db_server                      = var.is_dr ? module.sql.sql_failover_group_fqdn : module.sql.sql_server_fqdn
         db_name                        = module.sql.sql_database_name
-        managed_identity_client_id     = module.aks.kubelet_client_id
+        managed_identity_client_id     = azurerm_user_assigned_identity.app_identity.client_id
       }
     },
     var.is_dr ? {
@@ -21,7 +21,7 @@ locals {
         aks_secrets_provider_object_id = module.aks_dr[0].key_vault_secrets_provider_object_id
         db_server                      = module.sql.sql_failover_group_fqdn
         db_name                        = module.sql.sql_database_name
-        managed_identity_client_id     = module.aks_dr[0].kubelet_client_id
+        managed_identity_client_id     = azurerm_user_assigned_identity.app_identity_dr[0].client_id
       }
     } : {}
   )
