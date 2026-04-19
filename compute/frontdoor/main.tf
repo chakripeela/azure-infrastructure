@@ -90,16 +90,34 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
   enabled             = true
   mode                = "Prevention"
 
-  managed_rule {
-    type    = "DefaultRuleSet"
-    version = "1.0"
-    action  = "Block"
+  custom_rule {
+    name     = "BlockSQLInjection"
+    enabled  = true
+    priority = 1
+    type     = "MatchRule"
+    action   = "Block"
+
+    match_condition {
+      match_variable     = "QueryString"
+      operator           = "Contains"
+      negation_condition = false
+      match_values       = ["'", "\"", ";", "--", "/*", "*/", "xp_", "sp_", "exec", "union", "select", "insert", "update", "delete", "drop", "create", "alter"]
+    }
   }
 
-  managed_rule {
-    type    = "Microsoft_BotManagerRuleSet"
-    version = "1.0"
-    action  = "Block"
+  custom_rule {
+    name     = "BlockXSS"
+    enabled  = true
+    priority = 2
+    type     = "MatchRule"
+    action   = "Block"
+
+    match_condition {
+      match_variable     = "QueryString"
+      operator           = "Contains"
+      negation_condition = false
+      match_values       = ["<script", "javascript:", "onload=", "onerror=", "alert(", "eval(", "document.cookie"]
+    }
   }
 }
 
