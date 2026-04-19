@@ -69,3 +69,9 @@ variable "application_insights_retention_in_days" {
   description = "Retention period for Application Insights data."
   default     = 90
 }
+
+variable "aks_api_internal_ip" {
+  type        = string
+  description = "Internal IP address of the AKS API LoadBalancer service."
+  default     = "10.1.2.250"
+}

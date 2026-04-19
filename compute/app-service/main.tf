@@ -26,7 +26,7 @@ resource "azurerm_linux_web_app" "app" {
 
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
-    "API_BASE_URL"                        = "http://10.1.2.250"
+    "API_BASE_URL"                        = "http://${var.api_internal_ip}"
   }
   enabled = var.enabled
 }

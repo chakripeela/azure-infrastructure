@@ -23,3 +23,9 @@ variable "enabled" {
   type        = bool
   default     = true
 }
+
+variable "api_internal_ip" {
+  description = "Internal IP address of the AKS API LoadBalancer service."
+  type        = string
+  default     = "10.1.2.250"
+}

@@ -101,17 +101,16 @@ Recommended direction:
 
 ### Remove Hardcoded Internal API IP
 
-The internal API endpoint currently depends on the fixed private IP `10.1.2.250`.
+**COMPLETED**: Fully decoupled the hardcoded IP `10.1.2.250` by implementing dynamic IP discovery.
 
-Why:
+Changes made:
+- Removed `loadBalancerIP: "10.1.2.250"` from Kubernetes service manifest (`k8s/service.yml`)
+- Added Kubernetes provider to Terraform for querying service status
+- Added data source to dynamically fetch the LoadBalancer IP from the deployed service
+- Implemented fallback logic: uses discovered IP if available, falls back to variable default
+- Updated App Gateway and App Service configurations to use the discovered IP for both primary and DR regions
 
-- Brittle coupling between App Service, App Gateway, and the Kubernetes `LoadBalancer` service
-- Harder to evolve networking safely
-
-Recommended direction:
-
-- Move the IP to an explicit Terraform variable at minimum
-- Prefer a cleaner ingress-based pattern so App Gateway targets a Kubernetes ingress instead of a pinned service IP
+The system now automatically discovers the internal API IP once the Kubernetes service is deployed, eliminating manual IP updates and improving infrastructure flexibility.
 
 ## Recommended Order
 
