@@ -50,57 +50,62 @@ module "app_service" {
 }
 
 module "acr" {
-  source              = "./compute/acr"
-  application_name    = var.application_name
-  acr_name            = "chakripeelaacr"
-  location            = var.location
-  resource_group_name = module.resource_group.resource_group_name
+  source                     = "./compute/acr"
+  application_name           = var.application_name
+  acr_name                   = "chakripeelaacr"
+  location                   = var.location
+  resource_group_name        = module.resource_group.resource_group_name
+  log_analytics_workspace_id = module.log_analytics.workspace_id
 }
 
 module "aks" {
-  source              = "./compute/aks"
-  location            = var.location
-  resource_group_name = module.resource_group.resource_group_name
-  subnet_id           = module.virtual_network.subnet_aks_id
+  source                     = "./compute/aks"
+  location                   = var.location
+  resource_group_name        = module.resource_group.resource_group_name
+  subnet_id                  = module.virtual_network.subnet_aks_id
+  log_analytics_workspace_id = module.log_analytics.workspace_id
 }
 
 module "sql" {
-  source                  = "./data/sql"
-  application_name        = var.application_name
-  location                = var.location
-  sql_server_location     = coalesce(var.sql_location, var.location)
-  resource_group_name     = module.resource_group.resource_group_name
-  subnet_id               = module.virtual_network.subnet_sql_id
-  sql_private_dns_zone_id = module.virtual_network.sql_private_dns_zone_id
-  sql_server_name         = var.sql_server_name
-  sql_aad_admin_login     = var.sql_aad_admin_login
-  sql_aad_admin_object_id = var.sql_aad_admin_object_id
-  sql_database_name       = var.sql_database_name
-  enable_failover_group   = var.is_dr ? true : false
-  dr_sql_server_id        = var.is_dr ? module.sql_dr[0].sql_server_id : null
+  source                     = "./data/sql"
+  application_name           = var.application_name
+  location                   = var.location
+  sql_server_location        = coalesce(var.sql_location, var.location)
+  resource_group_name        = module.resource_group.resource_group_name
+  subnet_id                  = module.virtual_network.subnet_sql_id
+  sql_private_dns_zone_id    = module.virtual_network.sql_private_dns_zone_id
+  sql_server_name            = var.sql_server_name
+  sql_aad_admin_login        = var.sql_aad_admin_login
+  sql_aad_admin_object_id    = var.sql_aad_admin_object_id
+  sql_database_name          = var.sql_database_name
+  enable_failover_group      = var.is_dr ? true : false
+  dr_sql_server_id           = var.is_dr ? module.sql_dr[0].sql_server_id : null
+  log_analytics_workspace_id = module.log_analytics.workspace_id
 }
 
 # Conditional deployment: Application Gateway or Azure Front Door
 module "app_gateway" {
-  source              = "./compute/app-gateway"
-  application_name    = var.application_name
-  location            = var.location
-  resource_group_name = module.resource_group.resource_group_name
-  subnet_id           = module.virtual_network.subnet_appgw_id
-  app_service_fqdn    = module.app_service.app_service_default_hostname
-  backend_ip          = "10.1.2.250"
-  appgw_nsg_assoc_id  = module.virtual_network.appgw_nsg_assoc_id
+  source                     = "./compute/app-gateway"
+  application_name           = var.application_name
+  location                   = var.location
+  resource_group_name        = module.resource_group.resource_group_name
+  subnet_id                  = module.virtual_network.subnet_appgw_id
+  app_service_fqdn           = module.app_service.app_service_default_hostname
+  backend_ip                 = "10.1.2.250"
+  appgw_nsg_assoc_id         = module.virtual_network.appgw_nsg_assoc_id
+  log_analytics_workspace_id = module.log_analytics.workspace_id
 }
 
 module "frontdoor" {
-  source              = "./compute/frontdoor"
-  application_name    = var.application_name
-  location            = var.location
-  resource_group_name = module.resource_group.resource_group_name
-  app_service_fqdn    = module.app_service.app_service_default_hostname
-  dr_appgw_public_ip  = var.is_dr ? module.app_gateway_dr[0].appgw_public_ip : null
-  dr_enabled          = var.is_dr ? true : false
-  depends_on          = [module.app_gateway, module.app_gateway_dr]
+  source                     = "./compute/frontdoor"
+  application_name           = var.application_name
+  location                   = var.location
+  resource_group_name        = module.resource_group.resource_group_name
+  app_service_fqdn           = module.app_service.app_service_default_hostname
+  dr_appgw_public_ip         = var.is_dr ? module.app_gateway_dr[0].appgw_public_ip : null
+  dr_enabled                 = var.is_dr ? true : false
+  log_analytics_workspace_id = module.log_analytics.workspace_id
+  depends_on                 = [module.app_gateway, module.app_gateway_dr]
 }
 
 # DR Modules
@@ -113,41 +118,44 @@ module "resource_group_dr" {
 }
 # DR region App Gateway
 module "app_gateway_dr" {
-  count               = var.is_dr ? 1 : 0
-  source              = "./compute/app-gateway"
-  application_name    = "${var.application_name}-dr"
-  location            = var.dr_location
-  resource_group_name = module.resource_group_dr[0].resource_group_name
-  subnet_id           = module.virtual_network_dr[0].subnet_appgw_id
-  app_service_fqdn    = module.app_service_dr[0].app_service_default_hostname
-  backend_ip          = "10.1.2.250"
-  appgw_nsg_assoc_id  = module.virtual_network_dr[0].appgw_nsg_assoc_id
+  count                      = var.is_dr ? 1 : 0
+  source                     = "./compute/app-gateway"
+  application_name           = "${var.application_name}-dr"
+  location                   = var.dr_location
+  resource_group_name        = module.resource_group_dr[0].resource_group_name
+  subnet_id                  = module.virtual_network_dr[0].subnet_appgw_id
+  app_service_fqdn           = module.app_service_dr[0].app_service_default_hostname
+  backend_ip                 = "10.1.2.250"
+  appgw_nsg_assoc_id         = module.virtual_network_dr[0].appgw_nsg_assoc_id
+  log_analytics_workspace_id = module.log_analytics.workspace_id
 }
 
 # DR region SQL
 module "sql_dr" {
-  count                   = var.is_dr ? 1 : 0
-  source                  = "./data/sql"
-  application_name        = "${var.application_name}-dr"
-  location                = var.dr_location
-  sql_server_location     = coalesce(var.sql_dr_location, var.dr_location)
-  resource_group_name     = module.resource_group_dr[0].resource_group_name
-  subnet_id               = module.virtual_network_dr[0].subnet_sql_id
-  sql_private_dns_zone_id = module.virtual_network_dr[0].sql_private_dns_zone_id
-  sql_server_name         = "${var.sql_server_name}-dr"
-  sql_database_name       = "${var.sql_database_name}-dr"
-  sql_aad_admin_login     = var.sql_aad_admin_login
-  sql_aad_admin_object_id = var.sql_aad_admin_object_id
-  create_database         = false
+  count                      = var.is_dr ? 1 : 0
+  source                     = "./data/sql"
+  application_name           = "${var.application_name}-dr"
+  location                   = var.dr_location
+  sql_server_location        = coalesce(var.sql_dr_location, var.dr_location)
+  resource_group_name        = module.resource_group_dr[0].resource_group_name
+  subnet_id                  = module.virtual_network_dr[0].subnet_sql_id
+  sql_private_dns_zone_id    = module.virtual_network_dr[0].sql_private_dns_zone_id
+  sql_server_name            = "${var.sql_server_name}-dr"
+  sql_database_name          = "${var.sql_database_name}-dr"
+  sql_aad_admin_login        = var.sql_aad_admin_login
+  sql_aad_admin_object_id    = var.sql_aad_admin_object_id
+  create_database            = false
+  log_analytics_workspace_id = module.log_analytics_dr[0].workspace_id
 }
 
 # DR region AKS
 module "aks_dr" {
-  count               = var.is_dr ? 1 : 0
-  source              = "./compute/aks"
-  location            = var.dr_location
-  resource_group_name = module.resource_group_dr[0].resource_group_name
-  subnet_id           = module.virtual_network_dr[0].subnet_aks_id
+  count                      = var.is_dr ? 1 : 0
+  source                     = "./compute/aks"
+  location                   = var.dr_location
+  resource_group_name        = module.resource_group_dr[0].resource_group_name
+  subnet_id                  = module.virtual_network_dr[0].subnet_aks_id
+  log_analytics_workspace_id = module.log_analytics_dr[0].workspace_id
 }
 
 # DR region app service
@@ -170,6 +178,60 @@ module "virtual_network_dr" {
   resource_group_name   = module.resource_group_dr[0].resource_group_name
   shared_resource_group = module.resource_group_dr[0].shared_resource_group_name
 }
+
+# Alerts
+resource "azurerm_monitor_action_group" "alerts" {
+  name                = "alert-action-group"
+  resource_group_name = module.resource_group.resource_group_name
+  short_name          = "alerts"
+
+  email_receiver {
+    name          = "admin"
+    email_address = "admin@example.com" # Replace with actual email
+  }
+}
+
+resource "azurerm_monitor_metric_alert" "app_gateway_5xx" {
+  name                = "app-gateway-5xx-alert"
+  resource_group_name = module.resource_group.resource_group_name
+  scopes              = [module.app_gateway.appgw_id]
+  description         = "Alert when Application Gateway has unhealthy backends"
+  severity            = 2
+
+  criteria {
+    metric_namespace = "Microsoft.Network/applicationGateways"
+    metric_name      = "UnhealthyHostCount"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 0
+  }
+
+  action {
+    action_group_id = azurerm_monitor_action_group.alerts.id
+  }
+}
+
+resource "azurerm_monitor_metric_alert" "aks_pod_restarts" {
+  name                = "aks-pod-restarts-alert"
+  resource_group_name = module.resource_group.resource_group_name
+  scopes              = [module.aks.aks_id]
+  description         = "Alert when AKS pods restart frequently"
+  severity            = 2
+
+  criteria {
+    metric_namespace = "Microsoft.ContainerService/managedClusters"
+    metric_name      = "node_cpu_usage_percentage"
+    aggregation      = "Average"
+    operator         = "GreaterThan"
+    threshold        = 80 # Example threshold
+  }
+
+  action {
+    action_group_id = azurerm_monitor_action_group.alerts.id
+  }
+}
+
+# Add more alerts as needed for SQL, Key Vault, etc.
 
 module "log_analytics_dr" {
   count                           = var.is_dr ? 1 : 0

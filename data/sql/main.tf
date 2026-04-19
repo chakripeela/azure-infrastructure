@@ -56,3 +56,53 @@ resource "azurerm_mssql_failover_group" "sql_failover_group" {
     mode = "Manual"
   }
 }
+
+resource "azurerm_monitor_diagnostic_setting" "sql_server" {
+  name                       = "sql-server-diagnostic"
+  target_resource_id         = azurerm_mssql_server.sql_server.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category = "SQLSecurityAuditEvents"
+  }
+
+  enabled_log {
+    category = "SQLInsights"
+  }
+
+  enabled_log {
+    category = "AutomaticTuning"
+  }
+
+  enabled_log {
+    category = "QueryStoreRuntimeStatistics"
+  }
+
+  enabled_log {
+    category = "QueryStoreWaitStatistics"
+  }
+
+  enabled_log {
+    category = "Errors"
+  }
+
+  enabled_log {
+    category = "DatabaseWaitStatistics"
+  }
+
+  enabled_log {
+    category = "Timeouts"
+  }
+
+  enabled_log {
+    category = "Blocks"
+  }
+
+  enabled_log {
+    category = "Deadlocks"
+  }
+
+  enabled_log {
+    category = "AllMetrics"
+  }
+}

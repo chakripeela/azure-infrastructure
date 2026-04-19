@@ -120,3 +120,23 @@ resource "azurerm_key_vault_secret" "managed_identity_client_id" {
 
   depends_on = [time_sleep.wait_for_key_vault_policy]
 }
+
+resource "azurerm_monitor_diagnostic_setting" "key_vault" {
+  for_each = local.key_vault_regions
+
+  name                       = "key-vault-diagnostic-${each.key}"
+  target_resource_id         = azurerm_key_vault.api_secrets[each.key].id
+  log_analytics_workspace_id = module.log_analytics.workspace_id
+
+  enabled_log {
+    category = "AuditEvent"
+  }
+
+  enabled_log {
+    category = "AzurePolicyEvaluationDetails"
+  }
+
+  enabled_log {
+    category = "AllMetrics"
+  }
+}

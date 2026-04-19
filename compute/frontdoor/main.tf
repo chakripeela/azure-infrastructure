@@ -81,3 +81,65 @@ resource "azurerm_cdn_frontdoor_route" "main" {
   forwarding_protocol    = "HttpOnly"
   https_redirect_enabled = false
 }
+
+# WAF Policy for Front Door
+resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
+  name                = "fd-waf-${var.application_name}-${var.location}"
+  resource_group_name = var.resource_group_name
+  sku_name            = azurerm_cdn_frontdoor_profile.main.sku_name
+  enabled             = true
+  mode                = "Prevention"
+
+  managed_rule {
+    type    = "DefaultRuleSet"
+    version = "1.0"
+    action  = "Block"
+  }
+
+  managed_rule {
+    type    = "Microsoft_BotManagerRuleSet"
+    version = "1.0"
+    action  = "Block"
+  }
+}
+
+# Security Policy to associate WAF with endpoint
+resource "azurerm_cdn_frontdoor_security_policy" "waf_policy" {
+  name                     = "fd-security-${var.application_name}-${var.location}"
+  cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.main.id
+
+  security_policies {
+    firewall {
+      cdn_frontdoor_firewall_policy_id = azurerm_cdn_frontdoor_firewall_policy.waf.id
+
+      association {
+        domain {
+          cdn_frontdoor_domain_id = azurerm_cdn_frontdoor_endpoint.main.id
+        }
+        patterns_to_match = ["/*"]
+      }
+    }
+  }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "frontdoor" {
+  name                       = "frontdoor-diagnostic"
+  target_resource_id         = azurerm_cdn_frontdoor_profile.main.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category = "FrontDoorAccessLog"
+  }
+
+  enabled_log {
+    category = "FrontDoorHealthProbeLog"
+  }
+
+  enabled_log {
+    category = "FrontDoorWebApplicationFirewallLog"
+  }
+
+  enabled_log {
+    category = "AllMetrics"
+  }
+}

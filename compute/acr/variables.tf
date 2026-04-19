@@ -12,3 +12,7 @@ variable "location" {
 variable "application_name" {
   type = string
 }
+
+variable "log_analytics_workspace_id" {
+  type = string
+}

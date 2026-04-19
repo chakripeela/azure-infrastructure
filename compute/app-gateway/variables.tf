@@ -30,3 +30,7 @@ variable "appgw_nsg_assoc_id" {
   type        = string
   description = "Network Security Group Association ID for the Application Gateway"
 }
+
+variable "log_analytics_workspace_id" {
+  type = string
+}

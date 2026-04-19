@@ -50,6 +50,10 @@ variable "create_database" {
   default = true
 }
 
+variable "log_analytics_workspace_id" {
+  type = string
+}
+
 variable "dr_sql_server_id" {
   type        = string
   default     = ""

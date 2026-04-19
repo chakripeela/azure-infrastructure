@@ -26,3 +26,7 @@ variable "dr_enabled" {
   type        = bool
   default     = false
 }
+
+variable "log_analytics_workspace_id" {
+  type = string
+}

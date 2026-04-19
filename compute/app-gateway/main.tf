@@ -16,9 +16,21 @@ resource "azurerm_application_gateway" "appgw" {
   ]
 
   sku {
-    name     = "Standard_v2"
-    tier     = "Standard_v2"
+    name     = "WAF_v2"
+    tier     = "WAF_v2"
     capacity = 1
+  }
+
+  waf_configuration {
+    enabled          = true
+    firewall_mode    = "Prevention"
+    rule_set_type    = "OWASP"
+    rule_set_version = "3.2"
+
+    disabled_rule_group {
+      rule_group_name = "REQUEST-921-PROTOCOL-ATTACK"
+      rules           = ["921150"]
+    }
   }
 
   gateway_ip_configuration {
@@ -123,5 +135,27 @@ resource "azurerm_application_gateway" "appgw" {
     rule_type          = "PathBasedRouting"
     http_listener_name = "listener-http"
     url_path_map_name  = "url-path-map"
+  }
+}
+
+resource "azurerm_monitor_diagnostic_setting" "app_gateway" {
+  name                       = "app-gateway-diagnostic"
+  target_resource_id         = azurerm_application_gateway.appgw.id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
+  enabled_log {
+    category = "ApplicationGatewayAccessLog"
+  }
+
+  enabled_log {
+    category = "ApplicationGatewayPerformanceLog"
+  }
+
+  enabled_log {
+    category = "ApplicationGatewayFirewallLog"
+  }
+
+  enabled_log {
+    category = "AllMetrics"
   }
 }
