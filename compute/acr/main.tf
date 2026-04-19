@@ -24,7 +24,8 @@ resource "azurerm_monitor_diagnostic_setting" "acr" {
     category = "ContainerRegistryLoginEvents"
   }
 
-  enabled_log {
+  metric {
     category = "AllMetrics"
+    enabled  = true
   }
 }

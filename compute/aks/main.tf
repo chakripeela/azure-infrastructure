@@ -54,7 +54,8 @@ resource "azurerm_monitor_diagnostic_setting" "aks" {
     category = "guard"
   }
 
-  enabled_log {
+  metric {
     category = "AllMetrics"
+    enabled  = true
   }
 }
