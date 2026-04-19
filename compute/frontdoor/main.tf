@@ -157,7 +157,7 @@ resource "azurerm_monitor_diagnostic_setting" "frontdoor" {
     category = "FrontDoorWebApplicationFirewallLog"
   }
 
-  enabled_log {
-    category = "AllMetrics"
-  }
+  # enabled_log {
+  #   category = "AllMetrics"
+  # }
 }

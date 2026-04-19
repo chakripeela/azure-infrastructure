@@ -136,8 +136,8 @@ resource "azurerm_monitor_diagnostic_setting" "key_vault" {
     category = "AzurePolicyEvaluationDetails"
   }
 
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
+  # metric {
+  #   category = "AllMetrics"
+  #   enabled  = true
+  # }
 }

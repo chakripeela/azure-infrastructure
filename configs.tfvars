@@ -7,3 +7,4 @@ sql_aad_admin_login     = "Chakravarthy Peela"
 sql_aad_admin_object_id = "5a97597d-c6c4-4a3a-b163-82bae722e1d2"
 dr_location             = "westus"
 dr_app_service_enabled  = true
+aks_api_internal_ip     = "10.1.2.250"

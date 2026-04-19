@@ -90,12 +90,12 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
     category = "Blocks"
   }
 
-  enabled_log {
-    category = "Deadlocks"
-  }
+  # enabled_log {
+  #   category = "Deadlocks"
+  # }
 
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
+  # metric {
+  #   category = "AllMetrics"
+  #   enabled  = true
+  # }
 }
