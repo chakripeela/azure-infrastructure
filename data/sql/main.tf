@@ -43,19 +43,12 @@ resource "azurerm_private_endpoint" "sql_private_endpoint" {
   }
 }
 
-# resource "azurerm_mssql_firewall_rule" "allow_dacpac_ip" {
-#   name                = "AllowDacpacDeployment"
-#   server_id           = azurerm_mssql_server.sql_server.id
-#   start_ip_address    = "0.0.0.0"
-#   end_ip_address      = "255.255.255.255"
-# }
-
 # DR/Geo-replication: Only create failover group in primary region
 resource "azurerm_mssql_failover_group" "sql_failover_group" {
-  count                 = var.enable_failover_group && var.create_database ? 1 : 0
-  name                  = "failover-group-${var.application_name}"
-  server_id             = azurerm_mssql_server.sql_server.id
-  databases             = [azurerm_mssql_database.sql_database[0].id]
+  count     = var.enable_failover_group && var.create_database ? 1 : 0
+  name      = "failover-group-${var.application_name}"
+  server_id = azurerm_mssql_server.sql_server.id
+  databases = [azurerm_mssql_database.sql_database[0].id]
   partner_server {
     id = var.dr_sql_server_id
   }

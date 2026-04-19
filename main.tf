@@ -22,6 +22,16 @@ module "resource_group" {
   location         = var.location
 }
 
+module "log_analytics" {
+  source                          = "./common/log-analytics"
+  location                        = var.location
+  resource_group_name             = module.resource_group.resource_group_name
+  workspace_name                  = "${var.application_name}-${var.location}-law"
+  app_insights_name               = "${var.application_name}-${var.location}-ai"
+  log_analytics_retention_in_days = var.log_analytics_retention_in_days
+  app_insights_retention_in_days  = var.application_insights_retention_in_days
+}
+
 module "virtual_network" {
   source                = "./virtual-network"
   application_name      = var.application_name
@@ -159,4 +169,15 @@ module "virtual_network_dr" {
   location              = var.dr_location
   resource_group_name   = module.resource_group_dr[0].resource_group_name
   shared_resource_group = module.resource_group_dr[0].shared_resource_group_name
+}
+
+module "log_analytics_dr" {
+  count                           = var.is_dr ? 1 : 0
+  source                          = "./common/log-analytics"
+  location                        = var.dr_location
+  resource_group_name             = module.resource_group_dr[0].resource_group_name
+  workspace_name                  = "${var.application_name}-${var.dr_location}-law"
+  app_insights_name               = "${var.application_name}-${var.dr_location}-ai"
+  log_analytics_retention_in_days = var.log_analytics_retention_in_days
+  app_insights_retention_in_days  = var.application_insights_retention_in_days
 }

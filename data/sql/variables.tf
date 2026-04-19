@@ -51,7 +51,7 @@ variable "create_database" {
 }
 
 variable "dr_sql_server_id" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
   description = "Resource ID of the DR region SQL server."
 }

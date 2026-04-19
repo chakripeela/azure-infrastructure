@@ -1,5 +1,5 @@
 variable "acr_name" {
-  type = string
+  type    = string
   default = "chakripeelaacr"
 }
 variable "resource_group_name" {

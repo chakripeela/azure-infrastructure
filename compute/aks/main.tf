@@ -5,12 +5,12 @@ resource "azurerm_kubernetes_cluster" "aks" {
   dns_prefix          = "aks-todoapp-dns-${var.location}"
 
   default_node_pool {
-    name       = "default"
+    name                        = "default"
     temporary_name_for_rotation = "rotatepool"
-    node_count = 1
-    vm_size    = "Standard_DC2s_v3"
-    os_disk_size_gb = 30
-    vnet_subnet_id = var.subnet_id
+    node_count                  = 1
+    vm_size                     = "Standard_DC2s_v3"
+    os_disk_size_gb             = 30
+    vnet_subnet_id              = var.subnet_id
   }
 
   identity {

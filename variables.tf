@@ -57,3 +57,15 @@ variable "dr_app_service_enabled" {
   description = "Whether the DR App Service should remain enabled and running."
   default     = false
 }
+
+variable "log_analytics_retention_in_days" {
+  type        = number
+  description = "Retention period for Log Analytics workspace data."
+  default     = 30
+}
+
+variable "application_insights_retention_in_days" {
+  type        = number
+  description = "Retention period for Application Insights data."
+  default     = 90
+}
