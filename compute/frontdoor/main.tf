@@ -91,7 +91,7 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
   mode                = "Prevention"
 
   custom_rule {
-    name     = "BlockSQLInjection"
+    name     = "BlockSQLInjectionOperators"
     enabled  = true
     priority = 1
     type     = "MatchRule"
@@ -103,17 +103,10 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
       negation_condition = false
       match_values       = ["'", "\"", ";", "--", "/*", "*/", "xp_", "sp_", "exec", "union"]
     }
-
-    match_condition {
-      match_variable     = "QueryString"
-      operator           = "Contains"
-      negation_condition = false
-      match_values       = ["select", "insert", "update", "delete", "drop", "create", "alter"]
-    }
   }
 
   custom_rule {
-    name     = "BlockXSS"
+    name     = "BlockSQLInjectionStatements"
     enabled  = true
     priority = 2
     type     = "MatchRule"
@@ -123,7 +116,22 @@ resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
       match_variable     = "QueryString"
       operator           = "Contains"
       negation_condition = false
-      match_values       = ["<script", "javascript:", "onload=", "onerror=", "alert(", "eval(", "document.cookie"]
+      match_values       = ["select", "insert", "update", "delete", "drop", "create"]
+    }
+  }
+
+  custom_rule {
+    name     = "BlockXSS"
+    enabled  = true
+    priority = 3
+    type     = "MatchRule"
+    action   = "Block"
+
+    match_condition {
+      match_variable     = "QueryString"
+      operator           = "Contains"
+      negation_condition = false
+      match_values       = ["<script", "javascript:", "onload=", "onerror=", "alert("]
     }
   }
 }
