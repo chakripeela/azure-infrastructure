@@ -155,7 +155,7 @@ resource "azurerm_monitor_diagnostic_setting" "app_gateway" {
     category = "ApplicationGatewayFirewallLog"
   }
 
-  enabled_log {
-    category = "AllMetrics"
-  }
+  # enabled_log {
+  #   category = "AllMetrics"
+  # }
 }

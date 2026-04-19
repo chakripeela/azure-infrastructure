@@ -70,9 +70,9 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
   #   category = "QueryStoreRuntimeStatistics"
   # }
 
-  enabled_log {
-    category = "QueryStoreWaitStatistics"
-  }
+  # enabled_log {
+  #   category = "QueryStoreWaitStatistics"
+  # }
 
   enabled_log {
     category = "Errors"
