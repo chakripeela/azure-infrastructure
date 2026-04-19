@@ -22,6 +22,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     secret_rotation_interval = "2m"
   }
 
+  oidc_issuer_enabled = true
+
   network_profile {
     network_plugin = "azure"
   }

@@ -63,10 +63,6 @@ resource "azurerm_monitor_diagnostic_setting" "sql_server" {
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
   enabled_log {
-    category = "SQLInsights"
-  }
-
-  enabled_log {
     category = "AutomaticTuning"
   }
 
